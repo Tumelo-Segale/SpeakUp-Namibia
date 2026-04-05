@@ -701,7 +701,7 @@ document.getElementById("confirmLogoutBtn").addEventListener("click", () => {
   window.location.href = "index.html";
 });
 
-// ── Consumer Site Embed ───────────────────────────────────────
+// ── Consumer Site Embed (no verified badge on review cards) ──
 function renderConsumerSite() {
   let csSearch = "",
     csCat = "all",
@@ -753,14 +753,10 @@ function renderConsumerSite() {
     return `<div class="consumer-reviews-grid">${list
       .map((rev) => {
         const cc = countC(rev.comments);
-        const isV = businessesArray.some(
-          (b) => b.businessName.toLowerCase() === rev.businessName.toLowerCase()
-        );
+        // No verified badge on review cards
         return `<div class="review-card">
         <div class="card-top">
-          <div class="business-name">${esc(rev.businessName)}${
-          isV ? ` <span class="badge-verified">✓ Verified</span>` : ""
-        }</div>
+          <div class="business-name">${esc(rev.businessName)}</div>
           ${stars(rev.rating)}
         </div>
         <div class="category-tag"><i class="fas fa-tag"></i>${esc(

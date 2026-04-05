@@ -955,6 +955,11 @@ select:focus {
   background: rgba(255, 255, 255, 0.2);
 }
 
+/* Push hamburger to far right */
+.nav-buttons .consumer-hamburger {
+  margin-left: auto;
+}
+
 .consumer-sidebar-overlay {
   display: none;
   position: fixed;
