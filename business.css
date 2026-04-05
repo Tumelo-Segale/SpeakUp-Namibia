@@ -1,0 +1,638 @@
+/* ═══════════════════════════════════════
+   SpeakUp Namibia — business.css
+   Business Portal exclusive styles
+═══════════════════════════════════════ */
+
+/* Page layout */
+.biz-body {
+  background: var(--cream-dark);
+  font-family: Arial, sans-serif;
+}
+
+/* ── TOP BAR ── */
+.biz-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: var(--forest);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.28);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.biz-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--cream);
+  font-family: Arial, sans-serif;
+  font-weight: 900;
+  font-size: 1.35rem;
+}
+.biz-logo-portal {
+  font-family: Arial, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--amber-light);
+  display: block;
+  line-height: 1;
+  margin-top: 2px;
+}
+.biz-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.biz-top-info {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── PORTAL LAYOUT ── */
+.biz-portal-layout {
+  display: flex;
+  min-height: calc(100vh - 58px);
+}
+
+/* ── SIDEBAR ── */
+.biz-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--forest);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1rem 1rem;
+  position: sticky;
+  top: 58px;
+  height: calc(100vh - 58px);
+  overflow-y: auto;
+}
+.biz-sidebar-header {
+  text-align: center;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 1rem;
+}
+.biz-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--border);
+  color: var(--forest);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.6rem;
+  overflow: hidden;
+}
+.biz-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.biz-avatar-name {
+  font-family: Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+  word-break: break-word;
+}
+.biz-badge-verified {
+  display: inline-block;
+  margin: 4px auto 0;
+  background: var(--forest-light);
+  font-size: 0.6rem;
+}
+.biz-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+.biz-nav-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0.65rem 0.9rem;
+  border-radius: var(--r);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  font-family: Arial, sans-serif;
+  letter-spacing: 0.01em;
+}
+.biz-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+.biz-nav-btn.active {
+  background: var(--amber);
+  color: var(--forest);
+}
+.biz-nav-btn i {
+  width: 16px;
+  text-align: center;
+}
+.biz-sidebar-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.biz-sub-check-btn {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0.5rem;
+  border-radius: var(--r);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: Arial, sans-serif;
+}
+.biz-sub-check-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+.biz-logout-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ── MAIN CONTENT ── */
+.biz-main {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+/* ── TAB ── */
+.biz-tab-header {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.biz-tab-title {
+  font-family: Arial, sans-serif;
+  font-weight: 900;
+  font-size: 1.8rem;
+  color: var(--forest);
+  line-height: 1.1;
+}
+.biz-tab-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* ── STATS ── */
+.biz-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.biz-stat-card {
+  background: var(--forest);
+  color: #fff;
+  padding: 1.2rem;
+  text-align: center;
+  border-radius: var(--r);
+  position: relative;
+  overflow: hidden;
+}
+.biz-stat-card::after {
+  content: "";
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+}
+.biz-stat-card i {
+  color: var(--amber);
+  margin-bottom: 6px;
+  font-size: 1.2rem;
+  display: block;
+}
+.biz-stat-card strong {
+  font-size: 1.6rem;
+  display: block;
+  font-family: Arial, sans-serif;
+  font-weight: 900;
+}
+.biz-stat-card span {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── TWO-COL ── */
+.biz-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+.biz-panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 1.3rem;
+  box-shadow: var(--shadow-sm);
+}
+.biz-panel-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── RATING BREAKDOWN ── */
+.rb-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  margin-bottom: 6px;
+}
+.rb-label {
+  width: 44px;
+  color: var(--muted);
+  text-align: right;
+  white-space: nowrap;
+}
+.rb-bar-bg {
+  flex: 1;
+  background: var(--cream-dark);
+  height: 9px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.rb-bar {
+  height: 100%;
+  background: var(--amber);
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+.rb-count {
+  width: 24px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+/* ── ACTIVITY ── */
+.activity-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--cream-dark);
+  align-items: flex-start;
+}
+.activity-item:last-child {
+  border-bottom: none;
+}
+.activity-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+.activity-dot.rev {
+  background: #e8f5e9;
+  color: var(--forest-mid);
+}
+.activity-dot.cmt {
+  background: #fff8e1;
+  color: #b8860b;
+}
+.activity-text {
+  font-size: 0.83rem;
+  line-height: 1.4;
+}
+.activity-text small {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+/* ── REVIEWS LIST ── */
+.biz-review-item {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+.biz-review-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.biz-review-title-row {
+  font-family: Arial, sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--forest);
+}
+.biz-review-meta-row {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 0.7rem;
+}
+.biz-review-content {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--ink-mid);
+  margin-bottom: 0.9rem;
+}
+.biz-existing-reply {
+  background: #e8f5e9;
+  border-left: 3px solid var(--forest-light);
+  padding: 0.6rem 0.9rem;
+  border-radius: 0 var(--r) var(--r) 0;
+  font-size: 0.82rem;
+  color: var(--forest-mid);
+  margin-bottom: 0.7rem;
+}
+.biz-existing-reply strong {
+  display: block;
+  font-size: 0.75rem;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.biz-reply-area textarea {
+  margin-bottom: 6px;
+}
+
+/* ── COMMENTS IN REVIEWS TAB ── */
+.biz-comments-tree {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--cream-dark);
+}
+.biz-cmt {
+  background: var(--cream);
+  padding: 0.65rem 0.8rem;
+  margin: 0.4rem 0;
+  border-left: 2px solid var(--forest-mid);
+  border-radius: 0 var(--r) var(--r) 0;
+  font-size: 0.82rem;
+}
+.biz-cmt.biz-cmt-reply {
+  margin-left: 1.2rem;
+  border-left-color: var(--amber);
+  background: var(--cream-dark);
+}
+.biz-cmt-meta {
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-bottom: 3px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ── SETTINGS ── */
+.settings-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 1.5rem;
+  max-width: 520px;
+  box-shadow: var(--shadow-sm);
+}
+.settings-divider {
+  border-top: 1px solid var(--border);
+  margin: 1.2rem 0;
+}
+.success-msg {
+  color: var(--forest-light);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0.4rem;
+}
+#avatarPreviewImg {
+  background: #f0ebe0;
+}
+
+/* ── SUBSCRIPTION MODAL CONTENT ── */
+.sub-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.5rem 1rem;
+  border-radius: var(--r);
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+.sub-status-badge.active {
+  background: #e8f5e9;
+  color: var(--forest-mid);
+}
+.sub-status-badge.expired {
+  background: #fde8e8;
+  color: var(--red);
+}
+.sub-renew-box {
+  background: var(--cream);
+  border-radius: var(--r);
+  padding: 1rem;
+  margin-bottom: 1.2rem;
+}
+.sub-renew-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.sub-renew-features li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sub-renew-features li i {
+  color: var(--forest-light);
+}
+
+/* ── LIVE NOTIFICATION TOAST ── */
+.biz-live-notif {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  background: var(--forest);
+  color: #fff;
+  padding: 0.9rem 1.2rem;
+  border-radius: var(--r);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  box-shadow: var(--shadow-md);
+  max-width: 340px;
+  animation: sld 0.3s ease;
+  border-left: 4px solid var(--amber);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+/* ── HAMBURGER (always far right) ── */
+.biz-hamburger {
+  display: none;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--r);
+  transition: background 0.15s;
+  margin-left: auto; /* push to far right inside flex container */
+}
+.biz-hamburger:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ── SIDEBAR OVERLAY ── */
+.biz-sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 190;
+  backdrop-filter: blur(2px);
+}
+.biz-sidebar-overlay.active {
+  display: block;
+}
+
+/* ── CONSUMER EMBED ── */
+.consumer-embed {
+  min-height: 60vh;
+}
+.consumer-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.consumer-controls .control-input {
+  flex: 1;
+  min-width: 160px;
+}
+.consumer-reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.2rem;
+}
+
+/* ── MOBILE SIDEBAR & HAMBURGER FAR RIGHT ── */
+@media (max-width: 768px) {
+  .biz-hamburger {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+  }
+  /* Hide email info on mobile so hamburger sits at extreme right */
+  .biz-top-info {
+    display: none;
+  }
+  .biz-topbar-right {
+    gap: 0.5rem;
+  }
+  .biz-portal-layout {
+    flex-direction: column;
+  }
+  .biz-sidebar {
+    width: 280px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: -300px;
+    z-index: 200;
+    padding: 1.5rem 1rem 1rem;
+    transition: left 0.28s ease;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.35);
+  }
+  .biz-sidebar.open {
+    left: 0;
+  }
+  .biz-sidebar-header {
+    display: block;
+  }
+  .biz-sidebar-nav {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+  .biz-nav-btn {
+    padding: 0.65rem 0.9rem;
+    font-size: 0.88rem;
+  }
+  .biz-sidebar-footer {
+    flex-direction: column;
+  }
+  .biz-logout-btn {
+    width: 100%;
+  }
+  .biz-main {
+    padding: 1.2rem 1rem;
+  }
+  .biz-two-col {
+    grid-template-columns: 1fr;
+  }
+  /* badge placement under avatar on mobile */
+  .biz-sidebar-header .biz-badge-verified {
+    margin-top: 6px;
+    display: inline-block;
+  }
+}
+
+/* ── CONSUMER TAB — sidebar always visible (no full-page takeover) ── */
+.ws-status {
+  display: none !important;
+}
