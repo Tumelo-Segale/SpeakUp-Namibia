@@ -1,7 +1,7 @@
 /**
  * SpeakUp Namibia — business.js
- * Business Portal: Dashboard, Reviews & Replies, Settings, Avatar Upload, Business-to-Business Reviews
- * WebSocket live updates via speakup-ws.js
+ * Business Portal: Dashboard, Reviews & Replies, Settings, Avatar Upload,
+ * Export (CSV/PDF), Social Sharing, Notification Preferences
  */
 
 const CATEGORIES = [
@@ -111,7 +111,6 @@ function setupAvatarUpload() {
     const reader = new FileReader();
     reader.onload = function (ev) {
       const base64 = ev.target.result;
-      // update current business and businesses array
       currentBusiness.avatar = base64;
       const idx = businessesArray.findIndex((b) => b.id === currentBusiness.id);
       if (idx !== -1) businessesArray[idx].avatar = base64;
@@ -155,13 +154,9 @@ function loadData() {
   try {
     const sess = JSON.parse(sessionStorage.getItem("speakup_biz_session"));
     if (sess && sess.id) {
-      // merge with full business data to get avatar, etc.
       const fullBiz = businessesArray.find((b) => b.id === sess.id);
-      if (fullBiz) {
-        currentBusiness = { ...fullBiz };
-      } else {
-        currentBusiness = sess;
-      }
+      if (fullBiz) currentBusiness = { ...fullBiz };
+      else currentBusiness = sess;
     } else {
       currentBusiness = null;
     }
@@ -171,6 +166,14 @@ function loadData() {
   if (!currentBusiness) {
     window.location.href = "index.html";
     return;
+  }
+  // Ensure notification preferences exist
+  if (!currentBusiness.notifPrefs) {
+    currentBusiness.notifPrefs = {
+      newReview: true,
+      newComment: true,
+      bizReply: true,
+    };
   }
   initUI();
 }
@@ -186,16 +189,22 @@ function initUI() {
   initWSListeners();
   updateSidebarAvatar();
   setupAvatarUpload();
-  // Preview avatar in settings
   if (currentBusiness.avatar) updateAvatarPreview(currentBusiness.avatar);
 
-  // Delete account button
+  // Export buttons
+  document
+    .getElementById("exportCsvBtn")
+    ?.addEventListener("click", exportReviewsToCSV);
+  document
+    .getElementById("printReportBtn")
+    ?.addEventListener("click", () => window.print());
+
+  // Delete account
   const deleteBtn = document.getElementById("deleteAccountBtn");
-  if (deleteBtn) {
+  if (deleteBtn)
     deleteBtn.addEventListener("click", () =>
       openModal("deleteAccountConfirmModal")
     );
-  }
   const confirmDeleteBtn = document.getElementById("confirmDeleteAccountBtn");
   if (confirmDeleteBtn) {
     confirmDeleteBtn.onclick = () => {
@@ -222,7 +231,6 @@ function populateCategoryDropdowns() {
   });
   sel.value = currentBusiness.category;
 
-  // also populate review modal category dropdown
   const bizCat = document.getElementById("bizReviewCategory");
   if (bizCat) {
     bizCat.innerHTML = '<option value="">Select a category…</option>';
@@ -287,14 +295,12 @@ function renderDashboard() {
       )
     : 0;
 
-  // Stats
   document.getElementById("dashboardStats").innerHTML = `
     <div class="biz-stat-card"><i class="fas fa-star"></i><strong>${avg}</strong><span>Avg Rating</span></div>
     <div class="biz-stat-card"><i class="fas fa-chart-simple"></i><strong>${total}</strong><span>Total Reviews</span></div>
     <div class="biz-stat-card"><i class="fas fa-comments"></i><strong>${totalCmts}</strong><span>All Comments</span></div>
     <div class="biz-stat-card"><i class="fas fa-percent"></i><strong>${responseRate}%</strong><span>Response Rate</span></div>`;
 
-  // Sub badge
   const bizRec = businessesArray.find((b) => b.id === currentBusiness.id);
   const expiry = bizRec?.subscriptionExpiry
     ? new Date(bizRec.subscriptionExpiry)
@@ -312,7 +318,6 @@ function renderDashboard() {
       }</span>`
     : "";
 
-  // Rating breakdown
   const rbDiv = document.getElementById("ratingBreakdown");
   rbDiv.innerHTML =
     [5, 4, 3, 2, 1]
@@ -324,7 +329,6 @@ function renderDashboard() {
       .join("") ||
     '<p style="color:var(--muted);font-size:.85rem;">No reviews yet.</p>';
 
-  // Recent activity
   const recent = [...bizRevs]
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 6);
@@ -345,7 +349,7 @@ function renderDashboard() {
     : '<p style="color:var(--muted);font-size:.85rem;">No recent activity.</p>';
 }
 
-// ── Reviews & Replies ─────────────────────────────────────────
+// ── Reviews & Replies (with share buttons for positive reviews) ──
 function renderReviews() {
   const biz = currentBusiness.businessName;
   const bizRevs = reviewsArray.filter(
@@ -362,10 +366,11 @@ function renderReviews() {
       const allCmts = renderBizCommentTree(rev.comments || [], 0);
       const totalComments = countCmts(rev.comments || []);
       const bizReply = rev.comments?.find((c) => c.isBusiness);
+      const isPositive = rev.rating >= 4;
       return `<div class="biz-review-item">
       <div class="biz-review-top">
         <div class="biz-review-title-row">${esc(rev.title)}</div>
-        ${renderStars(rev.rating)}
+        <div>${renderStars(rev.rating)}</div>
       </div>
       <div class="biz-review-meta-row"><i class="fas fa-user"></i> ${esc(
         rev.userName
@@ -380,6 +385,28 @@ function renderReviews() {
           ? `<div class="biz-existing-reply"><strong><i class="fas fa-building"></i> Your reply:</strong>${esc(
               bizReply.text
             )}</div>`
+          : ""
+      }
+      ${
+        isPositive
+          ? `<div class="biz-share-buttons">
+              <span class="share-label"><i class="fas fa-share-alt"></i> Share this positive review:</span>
+              <button class="share-btn share-fb" data-review='${JSON.stringify({
+                title: rev.title,
+                business: rev.businessName,
+                rating: rev.rating,
+              })}'><i class="fab fa-facebook-f"></i></button>
+              <button class="share-btn share-tw" data-review='${JSON.stringify({
+                title: rev.title,
+                business: rev.businessName,
+                rating: rev.rating,
+              })}'><i class="fab fa-twitter"></i></button>
+              <button class="share-btn share-li" data-review='${JSON.stringify({
+                title: rev.title,
+                business: rev.businessName,
+                rating: rev.rating,
+              })}'><i class="fab fa-linkedin-in"></i></button>
+            </div>`
           : ""
       }
       ${
@@ -398,6 +425,7 @@ function renderReviews() {
     </div>`;
     })
     .join("");
+  // Reply buttons
   document.querySelectorAll(".dReplyBtn").forEach((btn) => {
     btn.onclick = () => {
       const txt = document.getElementById(`dc_${btn.dataset.id}`)?.value.trim();
@@ -407,6 +435,28 @@ function renderReviews() {
       }
       addCommentAsBiz(parseInt(btn.dataset.id), txt);
     };
+  });
+  // Share buttons
+  document.querySelectorAll(".share-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const review = JSON.parse(btn.dataset.review);
+      const text = `I just rated ${review.business} ${review.rating}★ on SpeakUp Namibia: "${review.title}". Read more at: ${window.location.origin}/index.html`;
+      let url = "";
+      if (btn.classList.contains("share-fb")) {
+        url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+          window.location.origin
+        )}&quote=${encodeURIComponent(text)}`;
+      } else if (btn.classList.contains("share-tw")) {
+        url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          text
+        )}`;
+      } else if (btn.classList.contains("share-li")) {
+        url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+          window.location.origin
+        )}&summary=${encodeURIComponent(text)}`;
+      }
+      if (url) window.open(url, "_blank", "width=600,height=400");
+    });
   });
 }
 
@@ -454,7 +504,73 @@ function addCommentAsBiz(reviewId, text) {
   renderReviews();
 }
 
-// ── Business reviews other businesses (Write Review) ─────────
+// ── Export to CSV ────────────────────────────────────────────
+function exportReviewsToCSV() {
+  const biz = currentBusiness.businessName;
+  const bizRevs = reviewsArray.filter(
+    (r) => r.businessName.toLowerCase() === biz.toLowerCase()
+  );
+  if (!bizRevs.length) {
+    alert("No reviews to export.");
+    return;
+  }
+  let csvRows = [
+    [
+      "Review ID",
+      "Date",
+      "Rating",
+      "Title",
+      "Content",
+      "User Name",
+      "Comment Author",
+      "Comment Text",
+      "Comment Date",
+      "Is Business Reply",
+    ],
+  ];
+  for (const rev of bizRevs) {
+    const revBase = [
+      rev.id,
+      rev.date,
+      rev.rating,
+      `"${rev.title.replace(/"/g, '""')}"`,
+      `"${rev.content.replace(/"/g, '""')}"`,
+      rev.userName,
+    ];
+    if (!rev.comments || rev.comments.length === 0) {
+      csvRows.push([...revBase, "", "", "", ""]);
+    } else {
+      const flattenComments = (comments, prefix = "") => {
+        for (const c of comments) {
+          csvRows.push([
+            ...revBase,
+            c.author,
+            `"${c.text.replace(/"/g, '""')}"`,
+            c.date,
+            c.isBusiness ? "Yes" : "No",
+          ]);
+          if (c.replies) flattenComments(c.replies, prefix + "  ");
+        }
+      };
+      flattenComments(rev.comments);
+    }
+  }
+  const csvContent = csvRows.map((row) => row.join(",")).join("\n");
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+  link.href = url;
+  link.setAttribute(
+    "download",
+    `reviews_${currentBusiness.businessName.replace(/\s/g, "_")}.csv`
+  );
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+// ── Business reviews other businesses ─────────────────────────
 let bizReviewStarRating = 0;
 function initBizReviewModal() {
   const stars = document.querySelectorAll("#bizRatingStarsInput i");
@@ -476,7 +592,6 @@ function initBizReviewModal() {
     .getElementById("bizWriteReviewBtn")
     ?.addEventListener("click", () => {
       document.getElementById("bizReviewForm").reset();
-      // auto-fill and lock business name
       const userNameField = document.getElementById("bizReviewUserName");
       if (userNameField && currentBusiness) {
         userNameField.value = currentBusiness.businessName;
@@ -539,14 +654,13 @@ function initBizReviewModal() {
     );
     closeModal("bizReviewModal");
     alert("Review published successfully!");
-    // if consumer tab is active, refresh it
     if (document.getElementById("tab-consumer").style.display !== "none")
       renderConsumerSite();
-    renderDashboard(); // refresh dashboard stats (not needed but safe)
+    renderDashboard();
   });
 }
 
-// ── Settings ──────────────────────────────────────────────────
+// ── Settings (including notification prefs) ──────────────────
 function prefillSettings() {
   document.getElementById("settingsBizName").value =
     currentBusiness.businessName;
@@ -555,6 +669,18 @@ function prefillSettings() {
     document.getElementById("settingsCategory").value =
       currentBusiness.category;
   }, 50);
+  // Notification checkboxes
+  const prefs = currentBusiness.notifPrefs || {
+    newReview: true,
+    newComment: true,
+    bizReply: true,
+  };
+  const cbNewRev = document.getElementById("notifNewReview");
+  const cbNewCmt = document.getElementById("notifNewComment");
+  const cbBizReply = document.getElementById("notifBizReply");
+  if (cbNewRev) cbNewRev.checked = prefs.newReview !== false;
+  if (cbNewCmt) cbNewCmt.checked = prefs.newComment !== false;
+  if (cbBizReply) cbBizReply.checked = prefs.bizReply !== false;
 }
 document.getElementById("saveSettingsBtn").addEventListener("click", () => {
   const name = document.getElementById("settingsBizName").value.trim();
@@ -604,12 +730,20 @@ document.getElementById("saveSettingsBtn").addEventListener("click", () => {
   businessesArray[idx].category = cat;
   businessesArray[idx].email = email;
   if (pwd) businessesArray[idx].password = pwd;
+  // Save notification preferences
+  const notifPrefs = {
+    newReview: document.getElementById("notifNewReview").checked,
+    newComment: document.getElementById("notifNewComment").checked,
+    bizReply: document.getElementById("notifBizReply").checked,
+  };
+  businessesArray[idx].notifPrefs = notifPrefs;
   saveBusinesses();
   currentBusiness = {
     ...currentBusiness,
     businessName: name,
     email,
     category: cat,
+    notifPrefs,
   };
   saveSession();
   document.getElementById("sidebarBizName").textContent = name;
@@ -701,7 +835,7 @@ document.getElementById("confirmLogoutBtn").addEventListener("click", () => {
   window.location.href = "index.html";
 });
 
-// ── Consumer Site Embed (no verified badge on review cards) ──
+// ── Consumer Site Embed (no verified badge on cards) ─────────
 function renderConsumerSite() {
   let csSearch = "",
     csCat = "all",
@@ -753,12 +887,10 @@ function renderConsumerSite() {
     return `<div class="consumer-reviews-grid">${list
       .map((rev) => {
         const cc = countC(rev.comments);
-        // No verified badge on review cards
         return `<div class="review-card">
-        <div class="card-top">
-          <div class="business-name">${esc(rev.businessName)}</div>
-          ${stars(rev.rating)}
-        </div>
+        <div class="card-top"><div class="business-name">${esc(
+          rev.businessName
+        )}</div>${stars(rev.rating)}</div>
         <div class="category-tag"><i class="fas fa-tag"></i>${esc(
           rev.category
         )}</div>
@@ -768,17 +900,17 @@ function renderConsumerSite() {
             ? rev.content.slice(0, 110) + "…"
             : rev.content
         )}</div>
-        <div class="review-meta">
-          <span><i class="fas fa-user"></i>${esc(rev.userName)}</span>
-          <span><i class="fas fa-calendar-alt"></i>${fmtD(rev.date)}</span>
-          ${
-            cc
-              ? `<span><i class="fas fa-comment"></i>${cc} comment${
-                  cc !== 1 ? "s" : ""
-                }</span>`
-              : ""
-          }
-        </div>
+        <div class="review-meta"><span><i class="fas fa-user"></i>${esc(
+          rev.userName
+        )}</span><span><i class="fas fa-calendar-alt"></i>${fmtD(
+          rev.date
+        )}</span>${
+          cc
+            ? `<span><i class="fas fa-comment"></i>${cc} comment${
+                cc !== 1 ? "s" : ""
+              }</span>`
+            : ""
+        }</div>
       </div>`;
       })
       .join("")}</div>`;
@@ -805,14 +937,11 @@ function renderConsumerSite() {
         )}"></div>
         <div class="control-input"><i class="fas fa-tags"></i><select id="cs_cat">${catOpts}</select></div>
         <div class="control-input"><i class="fas fa-star"></i><select id="cs_rating">${ratOpts}</select></div>
-        <div class="control-input"><i class="fas fa-sort"></i><select id="cs_sort">
-          <option value="newest"${
-            csSort === "newest" ? " selected" : ""
-          }>Newest First</option>
-          <option value="highest"${
-            csSort === "highest" ? " selected" : ""
-          }>Highest Rated</option>
-        </select></div>
+        <div class="control-input"><i class="fas fa-sort"></i><select id="cs_sort"><option value="newest"${
+          csSort === "newest" ? " selected" : ""
+        }>Newest First</option><option value="highest"${
+      csSort === "highest" ? " selected" : ""
+    }>Highest Rated</option></select></div>
       </div>
       <div id="cs_grid">${renderGrid()}</div>`;
     document.getElementById("cs_search").addEventListener("input", (e) => {
@@ -835,7 +964,7 @@ function renderConsumerSite() {
   renderAll();
 }
 
-// ── PayFast Integration (same as consumer) ────────────────────
+// ── PayFast Integration ──────────────────────────────────────
 const PAYFAST_MERCHANT_ID = "10042465";
 const PAYFAST_MERCHANT_KEY = "ylo9fatwu9xyj";
 const PAYFAST_SANDBOX = true;
@@ -845,10 +974,8 @@ function launchPayFast({ email, itemName, onSuccess, onCancel }) {
   const baseUrl = PAYFAST_SANDBOX
     ? "https://sandbox.payfast.co.za/eng/process"
     : "https://www.payfast.co.za/eng/process";
-
   const mPaymentId = "SU_" + Date.now();
   const returnBase = window.location.origin + window.location.pathname;
-
   const fields = {
     merchant_id: PAYFAST_MERCHANT_ID,
     merchant_key: PAYFAST_MERCHANT_KEY,
@@ -859,7 +986,6 @@ function launchPayFast({ email, itemName, onSuccess, onCancel }) {
     amount: SUB_AMOUNT,
     item_name: itemName.substring(0, 100),
   };
-
   const popup = window.open(
     "",
     "payfast_payment",
@@ -869,18 +995,10 @@ function launchPayFast({ email, itemName, onSuccess, onCancel }) {
     alert("Please allow popups for this site to complete payment.");
     return;
   }
-
-  popup.document
-    .write(`<!DOCTYPE html><html><head><title>Redirecting to PayFast…</title>
-    <style>body{margin:0;background:#1a3a2a;display:flex;flex-direction:column;align-items:center;
-    justify-content:center;min-height:100vh;font-family:sans-serif;color:#d4a853;}
-    p{font-size:1.05rem;margin-top:1rem;}
-    .spinner{width:40px;height:40px;border:4px solid rgba(212,168,83,.3);border-top-color:#d4a853;
-    border-radius:50%;animation:spin 0.8s linear infinite;}
-    @keyframes spin{to{transform:rotate(360deg);}}</style></head>
-    <body><div class="spinner"></div><p>Redirecting to PayFast…</p></body></html>`);
+  popup.document.write(
+    `<!DOCTYPE html><html><head><title>Redirecting to PayFast…</title><style>body{margin:0;background:#1a3a2a;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif;color:#d4a853;}p{font-size:1.05rem;margin-top:1rem;}.spinner{width:40px;height:40px;border:4px solid rgba(212,168,83,.3);border-top-color:#d4a853;border-radius:50%;animation:spin 0.8s linear infinite;}@keyframes spin{to{transform:rotate(360deg);}}</style></head><body><div class="spinner"></div><p>Redirecting to PayFast…</p></body></html>`
+  );
   popup.document.close();
-
   setTimeout(() => {
     const form = popup.document.createElement("form");
     form.method = "POST";
@@ -895,7 +1013,6 @@ function launchPayFast({ email, itemName, onSuccess, onCancel }) {
     popup.document.body.appendChild(form);
     form.submit();
   }, 300);
-
   const poll = setInterval(() => {
     try {
       if (popup.closed) {
@@ -918,7 +1035,7 @@ function launchPayFast({ email, itemName, onSuccess, onCancel }) {
   }, 600);
 }
 
-// ── WebSocket Listeners ──────────────────────────────────────
+// ── WebSocket Listeners (with notification preference filtering) ──
 function initWSListeners() {
   if (!window._SpeakUpWS) return;
   const WS = window._SpeakUpWS;
@@ -932,11 +1049,18 @@ function initWSListeners() {
     ) {
       renderDashboard();
       renderReviews();
-      showBizNotif(
-        `New ${data.rating}★ review: "${esc(data.title)}" by ${esc(
-          data.userName
-        )}`
-      );
+      const prefs = currentBusiness.notifPrefs || {
+        newReview: true,
+        newComment: true,
+        bizReply: true,
+      };
+      if (prefs.newReview !== false) {
+        showBizNotif(
+          `New ${data.rating}★ review: "${esc(data.title)}" by ${esc(
+            data.userName
+          )}`
+        );
+      }
     }
     if (document.getElementById("tab-consumer").style.display !== "none")
       renderConsumerSite();
@@ -955,9 +1079,16 @@ function initWSListeners() {
     ) {
       renderDashboard();
       renderReviews();
-      showBizNotif(
-        `New comment on "${esc(rev.title)}" by ${esc(comment.author)}`
-      );
+      const prefs = currentBusiness.notifPrefs || {
+        newReview: true,
+        newComment: true,
+        bizReply: true,
+      };
+      if (prefs.newComment !== false) {
+        showBizNotif(
+          `New comment on "${esc(rev.title)}" by ${esc(comment.author)}`
+        );
+      }
     }
   });
   WS.on(WS.EVENTS.BIZ_REPLY, ({ reviewId, comment }) => {
@@ -968,6 +1099,24 @@ function initWSListeners() {
     rev.comments = rev.comments || [];
     rev.comments.push(comment);
     saveReviews();
+    if (
+      rev.businessName.toLowerCase() ===
+      currentBusiness.businessName.toLowerCase()
+    ) {
+      const prefs = currentBusiness.notifPrefs || {
+        newReview: true,
+        newComment: true,
+        bizReply: true,
+      };
+      if (
+        prefs.bizReply !== false &&
+        comment.author !== currentBusiness.businessName
+      ) {
+        showBizNotif(
+          `New reply from ${esc(comment.author)} on a review of your business.`
+        );
+      }
+    }
   });
 }
 function findCmt(comments, id) {

@@ -636,3 +636,77 @@
 .ws-status {
   display: none !important;
 }
+
+/* Export & Share buttons */
+.biz-export-buttons {
+  display: flex;
+  gap: 0.8rem;
+}
+.biz-share-buttons {
+  margin: 0.6rem 0 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0;
+  border-top: 1px dashed var(--border);
+}
+.share-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+.share-btn {
+  background: none;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.85rem;
+}
+.share-fb {
+  background: #1877f2;
+  color: white;
+}
+.share-tw {
+  background: #1da1f2;
+  color: white;
+}
+.share-li {
+  background: #0077b5;
+  color: white;
+}
+.share-btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+/* Print styles */
+@media print {
+  .biz-topbar,
+  .biz-sidebar,
+  .biz-hamburger,
+  .biz-export-buttons,
+  .biz-reply-area,
+  .share-btn,
+  .share-label {
+    display: none !important;
+  }
+  .biz-portal-layout {
+    display: block !important;
+  }
+  .biz-main {
+    padding: 0 !important;
+  }
+  .biz-review-item {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+  }
+}

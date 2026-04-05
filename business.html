@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="business.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <!-- Fonts removed – now using system Arial -->
 </head>
 
 <body class="biz-body">
@@ -77,15 +76,19 @@
         </div>
       </section>
 
-      <!-- REVIEWS TAB -->
+      <!-- REVIEWS TAB (with export & share buttons) -->
       <section id="tab-reviews" class="biz-tab" style="display:none;">
         <div class="biz-tab-header">
           <h1 class="biz-tab-title">Reviews & Replies</h1>
+          <div class="biz-export-buttons">
+            <button id="exportCsvBtn" class="btn-outline-dark"><i class="fas fa-file-csv"></i> Export CSV</button>
+            <button id="printReportBtn" class="btn-outline-dark"><i class="fas fa-print"></i> Print / PDF</button>
+          </div>
         </div>
         <div id="dashboardReviewsList"></div>
       </section>
 
-      <!-- SETTINGS TAB -->
+      <!-- SETTINGS TAB (with notification preferences) -->
       <section id="tab-settings" class="biz-tab" style="display:none;">
         <div class="biz-tab-header">
           <h1 class="biz-tab-title">Business Settings</h1>
@@ -114,6 +117,19 @@
           <div class="form-group"><label>Business Name</label><input type="text" id="settingsBizName"></div>
           <div class="form-group"><label>Category</label><select id="settingsCategory"></select></div>
           <div class="form-group"><label>Email Address</label><input type="email" id="settingsEmail"></div>
+          <hr class="settings-divider">
+          <h3 class="biz-panel-title"><i class="fas fa-bell"></i> Live Notification Preferences</h3>
+          <div class="form-group">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+              <input type="checkbox" id="notifNewReview" checked>New review about my business
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; margin-top:6px;">
+              <input type="checkbox" id="notifNewComment" checked>New comment on my reviews
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; margin-top:6px;">
+              <input type="checkbox" id="notifBizReply" checked>Someone replied to my reply
+            </label>
+          </div>
           <hr class="settings-divider">
           <h3 class="biz-panel-title"><i class="fas fa-lock"></i> Change Password</h3>
           <div class="form-group"><label>New Password</label><input type="password" id="settingsPassword"
@@ -182,11 +198,9 @@
   <!-- SUBSCRIPTION STATUS MODAL -->
   <div id="subStatusModal" class="modal">
     <div class="modal-content" style="max-width:460px;">
-      <div class="modal-header">
-        <span class="modal-title"><i class="fas fa-rotate"
-            style="color:var(--amber);margin-right:10px;"></i>Subscription Status</span>
-        <button class="btn-close" onclick="closeModal('subStatusModal')">&#x2715;</button>
-      </div>
+      <div class="modal-header"><span class="modal-title"><i class="fas fa-rotate"
+            style="color:var(--amber);margin-right:10px;"></i>Subscription Status</span><button class="btn-close"
+          onclick="closeModal('subStatusModal')">&#x2715;</button></div>
       <div id="subStatusContent"></div>
     </div>
   </div>
@@ -194,11 +208,9 @@
   <!-- LOGOUT CONFIRM MODAL -->
   <div id="logoutConfirmModal" class="modal">
     <div class="modal-content" style="max-width:400px;">
-      <div class="modal-header">
-        <span class="modal-title" style="font-size:1.2rem;"><i class="fas fa-right-from-bracket"
-            style="color:var(--red);margin-right:10px;"></i>Confirm Logout</span>
-        <button class="btn-close" onclick="closeModal('logoutConfirmModal')">&#x2715;</button>
-      </div>
+      <div class="modal-header"><span class="modal-title" style="font-size:1.2rem;"><i class="fas fa-right-from-bracket"
+            style="color:var(--red);margin-right:10px;"></i>Confirm Logout</span><button class="btn-close"
+          onclick="closeModal('logoutConfirmModal')">&#x2715;</button></div>
       <p style="color:var(--ink-mid);margin-bottom:1.5rem;line-height:1.65;">Are you sure you want to log out of the
         Business Portal? You will be redirected to the consumer site.</p>
       <div class="modal-footer" style="margin-top:0;padding-top:0;border-top:none;">
@@ -211,11 +223,9 @@
   <!-- DELETE ACCOUNT CONFIRM MODAL -->
   <div id="deleteAccountConfirmModal" class="modal">
     <div class="modal-content" style="max-width:400px;">
-      <div class="modal-header">
-        <span class="modal-title" style="font-size:1.2rem;"><i class="fas fa-trash-alt"
-            style="color:var(--red);margin-right:10px;"></i>Delete Account</span>
-        <button class="btn-close" onclick="closeModal('deleteAccountConfirmModal')">&#x2715;</button>
-      </div>
+      <div class="modal-header"><span class="modal-title" style="font-size:1.2rem;"><i class="fas fa-trash-alt"
+            style="color:var(--red);margin-right:10px;"></i>Delete Account</span><button class="btn-close"
+          onclick="closeModal('deleteAccountConfirmModal')">&#x2715;</button></div>
       <p style="color:var(--ink-mid);margin-bottom:1.5rem;line-height:1.65;"><strong>Warning:</strong> This action is
         <strong>permanent</strong>. Your business profile, verified badge, and all associated data will be removed. You
         will be logged out immediately.
