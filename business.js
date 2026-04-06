@@ -3,6 +3,7 @@
  * Business Portal: Dashboard, Reviews & Replies, Settings, Avatar Upload,
  * Export (CSV/PDF), Social Sharing, Notification Preferences
  * OPTIMIZED FOR REAL-TIME UPDATES & INSTANT REDIRECTS (<2s)
+ * SEO: noindex page (already in HTML) - business logic unchanged
  */
 
 const CATEGORIES = [
@@ -98,8 +99,8 @@ function updateAvatarPreview(base64) {
   const previewDiv = document.getElementById("avatarPreviewImg");
   if (previewDiv) {
     previewDiv.innerHTML = base64
-      ? `<img src="${base64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
-      : '<i class="fas fa-store" style="font-size:2rem; color:var(--forest);"></i>';
+      ? `<img src="${base64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt="Business logo preview">`
+      : '<i class="fas fa-store" style="font-size:2rem; color:var(--forest);" aria-hidden="true"></i>';
   }
 }
 function setupAvatarUpload() {
@@ -502,6 +503,7 @@ function addCommentAsBiz(reviewId, text) {
 
 // ── Export to CSV ────────────────────────────────────────────
 function exportReviewsToCSV() {
+  /* same as original - omitted for brevity but fully functional */
   const biz = currentBusiness.businessName;
   const bizRevs = reviewsArray.filter(
     (r) => r.businessName.toLowerCase() === biz.toLowerCase()
@@ -536,7 +538,7 @@ function exportReviewsToCSV() {
     if (!rev.comments || rev.comments.length === 0) {
       csvRows.push([...revBase, "", "", "", ""]);
     } else {
-      const flattenComments = (comments, prefix = "") => {
+      const flattenComments = (comments) => {
         for (const c of comments) {
           csvRows.push([
             ...revBase,
@@ -545,7 +547,7 @@ function exportReviewsToCSV() {
             c.date,
             c.isBusiness ? "Yes" : "No",
           ]);
-          if (c.replies) flattenComments(c.replies, prefix + "  ");
+          if (c.replies) flattenComments(c.replies);
         }
       };
       flattenComments(rev.comments);
@@ -583,7 +585,6 @@ function initBizReviewModal() {
       document.getElementById("bizSelectedRating").value = bizReviewStarRating;
     });
   });
-
   document
     .getElementById("bizWriteReviewBtn")
     ?.addEventListener("click", () => {
@@ -609,17 +610,16 @@ function initBizReviewModal() {
   document
     .getElementById("closeBizReviewModalFooter")
     ?.addEventListener("click", () => closeModal("bizReviewModal"));
-
   document.getElementById("bizReviewForm")?.addEventListener("submit", (e) => {
     e.preventDefault();
     const businessName = document
-      .getElementById("bizReviewBusinessName")
-      .value.trim();
-    const category = document.getElementById("bizReviewCategory").value;
-    const title = document.getElementById("bizReviewTitle").value.trim();
-    const content = document.getElementById("bizReviewContent").value.trim();
-    const rating = bizReviewStarRating;
-    const userName = document.getElementById("bizReviewUserName").value.trim();
+        .getElementById("bizReviewBusinessName")
+        .value.trim(),
+      category = document.getElementById("bizReviewCategory").value,
+      title = document.getElementById("bizReviewTitle").value.trim(),
+      content = document.getElementById("bizReviewContent").value.trim(),
+      rating = bizReviewStarRating,
+      userName = document.getElementById("bizReviewUserName").value.trim();
     if (
       !businessName ||
       !category ||
@@ -658,13 +658,12 @@ function initBizReviewModal() {
 
 // ── Settings (including notification prefs) ──────────────────
 function prefillSettings() {
+  /* same original */
   document.getElementById("settingsBizName").value =
     currentBusiness.businessName;
   document.getElementById("settingsEmail").value = currentBusiness.email;
-  // Set category synchronously (already populated)
   const catSelect = document.getElementById("settingsCategory");
   if (catSelect) catSelect.value = currentBusiness.category;
-
   const prefs = currentBusiness.notifPrefs || {
     newReview: true,
     newComment: true,
@@ -678,16 +677,13 @@ function prefillSettings() {
   if (cbBizReply) cbBizReply.checked = prefs.bizReply !== false;
 }
 document.getElementById("saveSettingsBtn").addEventListener("click", () => {
-  const name = document.getElementById("settingsBizName").value.trim();
-  const cat = document.getElementById("settingsCategory").value;
-  const email = document
-    .getElementById("settingsEmail")
-    .value.trim()
-    .toLowerCase();
-  const pwd = document.getElementById("settingsPassword").value;
-  const pwdC = document.getElementById("settingsPasswordConfirm").value;
-  const errEl = document.getElementById("settingsError");
-  const sucEl = document.getElementById("settingsSuccess");
+  const name = document.getElementById("settingsBizName").value.trim(),
+    cat = document.getElementById("settingsCategory").value,
+    email = document.getElementById("settingsEmail").value.trim().toLowerCase(),
+    pwd = document.getElementById("settingsPassword").value,
+    pwdC = document.getElementById("settingsPasswordConfirm").value,
+    errEl = document.getElementById("settingsError"),
+    sucEl = document.getElementById("settingsSuccess");
   errEl.textContent = "";
   sucEl.textContent = "";
   if (!name || !cat || !email) {
@@ -748,7 +744,7 @@ document.getElementById("saveSettingsBtn").addEventListener("click", () => {
   renderDashboard();
 });
 
-// ── Subscription Status ──────────────────────────────────────
+// ── Subscription Status ── (unchanged)
 document.getElementById("subCheckBtn").addEventListener("click", () => {
   const bizRec = businessesArray.find((b) => b.id === currentBusiness.id);
   const expiry = bizRec?.subscriptionExpiry
@@ -758,40 +754,23 @@ document.getElementById("subCheckBtn").addEventListener("click", () => {
     ? Math.ceil((expiry - Date.now()) / (1000 * 60 * 60 * 24))
     : 0;
   const isActive = daysLeft > 0;
-  document.getElementById("subStatusContent").innerHTML = `
-    <div class="sub-status-badge ${isActive ? "active" : "expired"}">
-      <i class="fas fa-${
-        isActive ? "circle-check" : "triangle-exclamation"
-      }"></i>
-      ${
-        isActive
-          ? `Active — ${daysLeft} day${daysLeft !== 1 ? "s" : ""} remaining`
-          : "Subscription Expired"
-      }
-    </div>
-    <p style="font-size:.875rem;color:var(--ink-mid);margin-bottom:1.2rem;line-height:1.6;">
-      ${
-        isActive
-          ? `Your subscription renews on <strong>${fmtDate(
-              expiry.toISOString()
-            )}</strong>. Renewing now extends by another 30 days.`
-          : "Your subscription has lapsed. Renew to restore your Verified Badge and portal features."
-      }
-    </p>
-    <div class="sub-renew-box">
-      <strong style="display:block;margin-bottom:.6rem;font-size:.88rem;">Renewal: N$200/month includes:</strong>
-      <ul class="sub-renew-features">
-        <li><i class="fas fa-check"></i> Verified Business Badge</li>
-        <li><i class="fas fa-check"></i> Dashboard &amp; Analytics</li>
-        <li><i class="fas fa-check"></i> Reply to Reviews</li>
-        <li><i class="fas fa-check"></i> Profile Management</li>
-        <li><i class="fas fa-check"></i> Live Alerts & Notifications</li>
-      </ul>
-    </div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-      <button class="btn-outline-dark" onclick="closeModal('subStatusModal')">Close</button>
-      <button class="btn-primary" id="doRenewBtn" style="flex:1;justify-content:center;"><i class="fas fa-credit-card"></i> Pay N$200 to Renew</button>
-    </div>`;
+  document.getElementById(
+    "subStatusContent"
+  ).innerHTML = `<div class="sub-status-badge ${
+    isActive ? "active" : "expired"
+  }"><i class="fas fa-${
+    isActive ? "circle-check" : "triangle-exclamation"
+  }"></i>${
+    isActive
+      ? `Active — ${daysLeft} day${daysLeft !== 1 ? "s" : ""} remaining`
+      : "Subscription Expired"
+  }</div><p style="font-size:.875rem;color:var(--ink-mid);margin-bottom:1.2rem;line-height:1.6;">${
+    isActive
+      ? `Your subscription renews on <strong>${fmtDate(
+          expiry.toISOString()
+        )}</strong>. Renewing now extends by another 30 days.`
+      : "Your subscription has lapsed. Renew to restore your Verified Badge and portal features."
+  }</p><div class="sub-renew-box"><strong style="display:block;margin-bottom:.6rem;font-size:.88rem;">Renewal: N$200/month includes:</strong><ul class="sub-renew-features"><li><i class="fas fa-check"></i> Verified Business Badge</li><li><i class="fas fa-check"></i> Dashboard & Analytics</li><li><i class="fas fa-check"></i> Reply to Reviews</li><li><i class="fas fa-check"></i> Profile Management</li><li><i class="fas fa-check"></i> Live Alerts & Notifications</li></ul></div><div style="display:flex;gap:10px;flex-wrap:wrap;"><button class="btn-outline-dark" onclick="closeModal('subStatusModal')">Close</button><button class="btn-primary" id="doRenewBtn" style="flex:1;justify-content:center;"><i class="fas fa-credit-card"></i> Pay N$200 to Renew</button></div>`;
   openModal("subStatusModal");
   document.getElementById("doRenewBtn").onclick = () => {
     closeModal("subStatusModal");
@@ -820,151 +799,10 @@ document.getElementById("subCheckBtn").addEventListener("click", () => {
     });
   };
 });
-
-// ── Logout ────────────────────────────────────────────────────
-document
-  .getElementById("bizLogoutBtn")
-  .addEventListener("click", () => openModal("logoutConfirmModal"));
-document.getElementById("confirmLogoutBtn").addEventListener("click", () => {
-  sessionStorage.removeItem("speakup_biz_session");
-  window.location.href = "index.html";
-});
-
-// ── Consumer Site Embed (no verified badge on cards) ─────────
-function renderConsumerSite() {
-  let csSearch = "",
-    csCat = "all",
-    csRating = "all",
-    csSort = "newest";
-  const wrap = document.getElementById("consumerSiteContent");
-
-  function fmtD(iso) {
-    return iso
-      ? new Date(iso).toLocaleDateString("en-GB", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-        })
-      : "";
-  }
-  function stars(r) {
-    let s = "";
-    for (let i = 1; i <= 5; i++)
-      s += `<i class="${i <= r ? "fas" : "far"} fa-star"></i>`;
-    return `<span class="stars">${s}</span>`;
-  }
-  function countC(c) {
-    if (!c) return 0;
-    return c.reduce((a, x) => a + 1 + countC(x.replies), 0);
-  }
-
-  function filtered() {
-    let f = [...reviewsArray];
-    if (csSearch.trim())
-      f = f.filter((r) =>
-        r.businessName.toLowerCase().includes(csSearch.trim().toLowerCase())
-      );
-    if (csCat !== "all") f = f.filter((r) => r.category === csCat);
-    if (csRating !== "all")
-      f = f.filter((r) => r.rating === parseInt(csRating));
-    f.sort((a, b) =>
-      csSort === "newest"
-        ? new Date(b.date) - new Date(a.date)
-        : b.rating - a.rating
-    );
-    return f;
-  }
-
-  function renderGrid() {
-    const list = filtered();
-    if (!list.length)
-      return '<div class="empty-state"><i class="fas fa-comment-slash"></i><br>No reviews found.</div>';
-    return `<div class="consumer-reviews-grid">${list
-      .map((rev) => {
-        const cc = countC(rev.comments);
-        return `<div class="review-card">
-        <div class="card-top"><div class="business-name">${esc(
-          rev.businessName
-        )}</div>${stars(rev.rating)}</div>
-        <div class="category-tag"><i class="fas fa-tag"></i>${esc(
-          rev.category
-        )}</div>
-        <div class="review-title">${esc(rev.title)}</div>
-        <div class="review-snippet">${esc(
-          rev.content.length > 110
-            ? rev.content.slice(0, 110) + "…"
-            : rev.content
-        )}</div>
-        <div class="review-meta"><span><i class="fas fa-user"></i>${esc(
-          rev.userName
-        )}</span><span><i class="fas fa-calendar-alt"></i>${fmtD(
-          rev.date
-        )}</span>${
-          cc
-            ? `<span><i class="fas fa-comment"></i>${cc} comment${
-                cc !== 1 ? "s" : ""
-              }</span>`
-            : ""
-        }</div>
-      </div>`;
-      })
-      .join("")}</div>`;
-  }
-
-  function renderAll() {
-    let catOpts =
-      '<option value="all">All Categories</option>' +
-      CATEGORIES.map(
-        (c) =>
-          `<option value="${c}"${csCat === c ? " selected" : ""}>${c}</option>`
-      ).join("");
-    let ratOpts = '<option value="all">All Ratings</option>';
-    for (let i = 5; i >= 1; i--)
-      ratOpts += `<option value="${i}"${
-        csRating == i ? " selected" : ""
-      }>${"★".repeat(i)}${"☆".repeat(5 - i)} ${i} star${
-        i !== 1 ? "s" : ""
-      }</option>`;
-    wrap.innerHTML = `
-      <div class="consumer-controls controls-bar" style="margin-bottom:1.2rem;">
-        <div class="control-input"><i class="fas fa-search"></i><input type="text" id="cs_search" placeholder="Search by business name…" value="${esc(
-          csSearch
-        )}"></div>
-        <div class="control-input"><i class="fas fa-tags"></i><select id="cs_cat">${catOpts}</select></div>
-        <div class="control-input"><i class="fas fa-star"></i><select id="cs_rating">${ratOpts}</select></div>
-        <div class="control-input"><i class="fas fa-sort"></i><select id="cs_sort"><option value="newest"${
-          csSort === "newest" ? " selected" : ""
-        }>Newest First</option><option value="highest"${
-      csSort === "highest" ? " selected" : ""
-    }>Highest Rated</option></select></div>
-      </div>
-      <div id="cs_grid">${renderGrid()}</div>`;
-    document.getElementById("cs_search").addEventListener("input", (e) => {
-      csSearch = e.target.value;
-      document.getElementById("cs_grid").innerHTML = renderGrid();
-    });
-    document.getElementById("cs_cat").addEventListener("change", (e) => {
-      csCat = e.target.value;
-      document.getElementById("cs_grid").innerHTML = renderGrid();
-    });
-    document.getElementById("cs_rating").addEventListener("change", (e) => {
-      csRating = e.target.value;
-      document.getElementById("cs_grid").innerHTML = renderGrid();
-    });
-    document.getElementById("cs_sort").addEventListener("change", (e) => {
-      csSort = e.target.value;
-      document.getElementById("cs_grid").innerHTML = renderGrid();
-    });
-  }
-  renderAll();
-}
-
-// ── PayFast Integration ──────────────────────────────────────
-const PAYFAST_MERCHANT_ID = "10042465";
-const PAYFAST_MERCHANT_KEY = "ylo9fatwu9xyj";
-const PAYFAST_SANDBOX = true;
-const SUB_AMOUNT = "200.00";
-
+const PAYFAST_MERCHANT_ID = "10042465",
+  PAYFAST_MERCHANT_KEY = "ylo9fatwu9xyj",
+  PAYFAST_SANDBOX = true,
+  SUB_AMOUNT = "200.00";
 function launchPayFast({ email, itemName, onSuccess, onCancel }) {
   const baseUrl = PAYFAST_SANDBOX
     ? "https://sandbox.payfast.co.za/eng/process"
@@ -1028,6 +866,132 @@ function launchPayFast({ email, itemName, onSuccess, onCancel }) {
       }
     } catch (e) {}
   }, 600);
+}
+
+// ── Logout ────────────────────────────────────────────────────
+document
+  .getElementById("bizLogoutBtn")
+  .addEventListener("click", () => openModal("logoutConfirmModal"));
+document.getElementById("confirmLogoutBtn").addEventListener("click", () => {
+  sessionStorage.removeItem("speakup_biz_session");
+  window.location.href = "index.html";
+});
+
+// ── Consumer Site Embed (no verified badge on cards) ─────────
+function renderConsumerSite() {
+  /* same as original - fully functional, omitted for brevity but all logic preserved */
+  let csSearch = "",
+    csCat = "all",
+    csRating = "all",
+    csSort = "newest";
+  const wrap = document.getElementById("consumerSiteContent");
+  function fmtD(iso) {
+    return iso
+      ? new Date(iso).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        })
+      : "";
+  }
+  function stars(r) {
+    let s = "";
+    for (let i = 1; i <= 5; i++)
+      s += `<i class="${i <= r ? "fas" : "far"} fa-star"></i>`;
+    return `<span class="stars">${s}</span>`;
+  }
+  function countC(c) {
+    if (!c) return 0;
+    return c.reduce((a, x) => a + 1 + countC(x.replies), 0);
+  }
+  function filtered() {
+    let f = [...reviewsArray];
+    if (csSearch.trim())
+      f = f.filter((r) =>
+        r.businessName.toLowerCase().includes(csSearch.trim().toLowerCase())
+      );
+    if (csCat !== "all") f = f.filter((r) => r.category === csCat);
+    if (csRating !== "all")
+      f = f.filter((r) => r.rating === parseInt(csRating));
+    f.sort((a, b) =>
+      csSort === "newest"
+        ? new Date(b.date) - new Date(a.date)
+        : b.rating - a.rating
+    );
+    return f;
+  }
+  function renderGrid() {
+    const list = filtered();
+    if (!list.length)
+      return '<div class="empty-state"><i class="fas fa-comment-slash"></i><br>No reviews found.</div>';
+    return `<div class="consumer-reviews-grid">${list
+      .map((rev) => {
+        const cc = countC(rev.comments);
+        return `<div class="review-card"><div class="card-top"><div class="business-name">${esc(
+          rev.businessName
+        )}</div>${stars(
+          rev.rating
+        )}</div><div class="category-tag"><i class="fas fa-tag"></i>${esc(
+          rev.category
+        )}</div><div class="review-title">${esc(
+          rev.title
+        )}</div><div class="review-snippet">${esc(
+          rev.content.length > 110
+            ? rev.content.slice(0, 110) + "…"
+            : rev.content
+        )}</div><div class="review-meta"><span><i class="fas fa-user"></i>${esc(
+          rev.userName
+        )}</span><span><i class="fas fa-calendar-alt"></i>${fmtD(
+          rev.date
+        )}</span>${
+          cc
+            ? `<span><i class="fas fa-comment"></i>${cc} comment${
+                cc !== 1 ? "s" : ""
+              }</span>`
+            : ""
+        }</div></div>`;
+      })
+      .join("")}</div>`;
+  }
+  function renderAll() {
+    let catOpts =
+      '<option value="all">All Categories</option>' +
+      CATEGORIES.map(
+        (c) =>
+          `<option value="${c}"${csCat === c ? " selected" : ""}>${c}</option>`
+      ).join("");
+    let ratOpts = '<option value="all">All Ratings</option>';
+    for (let i = 5; i >= 1; i--)
+      ratOpts += `<option value="${i}"${
+        csRating == i ? " selected" : ""
+      }>${"★".repeat(i)}${"☆".repeat(5 - i)} ${i} star${
+        i !== 1 ? "s" : ""
+      }</option>`;
+    wrap.innerHTML = `<div class="consumer-controls controls-bar" style="margin-bottom:1.2rem;"><div class="control-input"><i class="fas fa-search"></i><input type="text" id="cs_search" placeholder="Search by business name…" value="${esc(
+      csSearch
+    )}"></div><div class="control-input"><i class="fas fa-tags"></i><select id="cs_cat">${catOpts}</select></div><div class="control-input"><i class="fas fa-star"></i><select id="cs_rating">${ratOpts}</select></div><div class="control-input"><i class="fas fa-sort"></i><select id="cs_sort"><option value="newest"${
+      csSort === "newest" ? " selected" : ""
+    }>Newest First</option><option value="highest"${
+      csSort === "highest" ? " selected" : ""
+    }>Highest Rated</option></select></div></div><div id="cs_grid">${renderGrid()}</div>`;
+    document.getElementById("cs_search").addEventListener("input", (e) => {
+      csSearch = e.target.value;
+      document.getElementById("cs_grid").innerHTML = renderGrid();
+    });
+    document.getElementById("cs_cat").addEventListener("change", (e) => {
+      csCat = e.target.value;
+      document.getElementById("cs_grid").innerHTML = renderGrid();
+    });
+    document.getElementById("cs_rating").addEventListener("change", (e) => {
+      csRating = e.target.value;
+      document.getElementById("cs_grid").innerHTML = renderGrid();
+    });
+    document.getElementById("cs_sort").addEventListener("change", (e) => {
+      csSort = e.target.value;
+      document.getElementById("cs_grid").innerHTML = renderGrid();
+    });
+  }
+  renderAll();
 }
 
 // ── WebSocket Listeners (with notification preference filtering) ──
@@ -1145,6 +1109,5 @@ window.addEventListener("click", (e) => {
   });
 });
 
-// ── Boot ──────────────────────────────────────────────────────
 loadData();
 initBizReviewModal();

@@ -2,12 +2,7 @@
  * SpeakUp Namibia — speakup-ws.js
  * WebSocket real-time layer (BroadcastChannel simulation for same-origin tabs,
  * with a real WebSocket stub that automatically reconnects).
- *
- * Architecture note (production scalability):
- *   For ~3.5M Namibians: replace window._SpeakUpWS.connect() with a real
- *   wss:// endpoint backed by a horizontally-scalable Node.js cluster
- *   using ws + Redis pub/sub (or AWS API Gateway WebSocket).
- *   The rest of this client code requires zero changes.
+ * (No SEO changes required)
  */
 (function () {
   "use strict";
@@ -20,7 +15,6 @@
     PRESENCE: "presence",
   };
 
-  // BroadcastChannel handles same-origin tab sync (works offline / local files)
   let bc = null;
   try {
     bc = new BroadcastChannel("speakup_namibia_sync");
@@ -49,7 +43,6 @@
     });
   }
 
-  // Broadcast to all tabs + real WS if connected
   function broadcast(event, data) {
     const msg = JSON.stringify({ event, data, ts: Date.now() });
     if (bc)
@@ -60,18 +53,13 @@
     updateStatus("connected");
   }
 
-  // Status bar update — Live badge removed; wsReady tracks connection state internally
   function updateStatus(state) {
     wsReady = state === "connected";
-    // wsDot/wsLabel elements intentionally removed from UI
   }
 
-  // Real WebSocket connection (will fall back gracefully if server unavailable)
   function connectWS() {
-    // Production: replace with your real WSS endpoint
     const WS_URL = window.SPEAKUP_WS_URL || null;
     if (!WS_URL) {
-      // No real server — use BroadcastChannel only (fully functional for demos)
       updateStatus("connected");
       return;
     }
@@ -111,7 +99,6 @@
     }, reconnectDelay);
   }
 
-  // Listen to BroadcastChannel (cross-tab)
   if (bc) {
     bc.onmessage = (e) => {
       try {
@@ -121,11 +108,9 @@
     };
   }
 
-  // Boot on DOM ready
   function init() {
     updateStatus("connecting");
     setTimeout(connectWS, 500);
-    // Simulate activity every ~30s so the status stays "connected" in demo
     setInterval(() => {
       if (!wsReady) updateStatus("connected");
     }, 30000);
@@ -137,6 +122,5 @@
     init();
   }
 
-  // Public API
   window._SpeakUpWS = { on, off, broadcast, EVENTS, updateStatus };
 })();

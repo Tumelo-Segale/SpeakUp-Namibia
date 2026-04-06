@@ -4,24 +4,109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <!-- Primary SEO Meta Tags -->
   <title>SpeakUp Namibia</title>
+  <meta name="description"
+    content="SpeakUp Namibia is the country's leading consumer review platform. Read and write honest reviews about Namibian businesses, share experiences, and hold companies accountable.">
+  <meta name="keywords"
+    content="Namibia reviews, consumer feedback, business ratings, SpeakUp Namibia, customer reviews, Namibia business directory, verified business">
+  <meta name="author" content="SpeakUp Namibia">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0c3a2d">
+
+  <!-- Canonical URL (absolute via JS fallback) -->
+  <link rel="canonical" href="https://speakupnamibia.com/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SpeakUp Namibia - Your Voice, Their Accountability">
+  <meta property="og:description"
+    content="Rate and review Namibian businesses. Join thousands of consumers making informed choices and driving service excellence.">
+  <meta property="og:image" content="./logo-icon.png">
+  <meta property="og:url" content="https://speakupnamibia.com/">
+  <meta property="og:site_name" content="SpeakUp Namibia">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SpeakUp Namibia - Consumer Reviews Platform">
+  <meta name="twitter:description"
+    content="Read authentic consumer reviews for businesses across Namibia. Share your experience and help improve accountability.">
+  <meta name="twitter:image" content="./logo-icon.png">
+
+  <!-- Structured Data: Organization + WebSite -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "SpeakUp Namibia",
+    "url": "https://speakupnamibia.com",
+    "logo": "https://speakupnamibia.com/logo-icon.png",
+    "description": "Namibia's premier consumer review platform connecting customers and businesses through transparent feedback.",
+    "sameAs": [
+      "https://www.facebook.com/speakupnamibia",
+      "https://twitter.com/speakupnamibia"
+    ],
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "NA"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "SpeakUp Namibia",
+    "url": "https://speakupnamibia.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://speakupnamibia.com/?search={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
   <link rel="stylesheet" href="style.css">
   <link rel="shortcut icon" href="./logo-icon.png" type="image/x-icon">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- Dynamic absolute URLs for social images (works on any domain) -->
+  <script>
+    (function () {
+      const origin = window.location.origin;
+      const setMetaImage = (property, url) => {
+        let meta = document.querySelector(`meta[property="${property}"], meta[name="${property}"]`);
+        if (meta) meta.setAttribute('content', url);
+      };
+      if (origin) {
+        const absoluteLogo = origin + '/logo-icon.png';
+        setMetaImage('og:image', absoluteLogo);
+        setMetaImage('twitter:image', absoluteLogo);
+        // update canonical in case of non-root path
+        const canonicalLink = document.querySelector('link[rel="canonical"]');
+        if (canonicalLink && window.location.pathname === '/') canonicalLink.href = origin + '/';
+      }
+    })();
+  </script>
 </head>
 
 <body>
+  <!-- Accessibility skip link -->
+  <a href="#main-content" class="skip-link"
+    style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;">Skip to main content</a>
+
   <!-- MOBILE SIDEBAR OVERLAY -->
   <div class="consumer-sidebar-overlay" id="consumerSidebarOverlay"></div>
 
   <!-- MOBILE SIDEBAR -->
-  <aside class="consumer-sidebar" id="consumerSidebar">
+  <aside class="consumer-sidebar" id="consumerSidebar" aria-label="Mobile navigation menu">
     <div class="consumer-sidebar-top">
-      <span class="consumer-sidebar-logo"><img class="logo-image" src="./logo-icon.png" alt="SpeakUp Namibia">
+      <span class="consumer-sidebar-logo"><img class="logo-image" src="./logo-icon.png" alt="SpeakUp Namibia Logo">
         SpeakUp</span>
       <button class="consumer-sidebar-close" id="consumerSidebarClose" aria-label="Close menu">&#x2715;</button>
     </div>
-    <nav class="consumer-sidebar-nav">
+    <nav class="consumer-sidebar-nav" aria-label="Sidebar navigation">
       <button id="sidebarWriteReviewBtn" class="consumer-snav-btn"><i class="fas fa-pen"></i> Write a Review</button>
       <button id="sidebarBizPortalBtn" class="consumer-snav-btn"><i class="fas fa-store"></i> Business Portal</button>
       <button id="sidebarHelpBtn" class="consumer-snav-btn"><i class="fas fa-circle-question"></i> How It Works</button>
@@ -29,14 +114,14 @@
     <div id="consumerSidebarBizInfo" class="consumer-sidebar-biz-info"></div>
   </aside>
 
-  <nav class="top-nav">
+  <nav class="top-nav" aria-label="Main navigation">
     <div class="logo-area">
       <h2><span class="logo-icon"><img class="logo-image" src="./logo-icon.png"
-            alt="SpeakUp Namibia"></span><span>SpeakUp Namibia<span class="logo-sub">Consumer & Business Reviews
-          </span></span></h2>
+            alt="SpeakUp Namibia home"></span><span>SpeakUp Namibia<span class="logo-sub">Consumer & Business
+            Reviews</span></span></h2>
     </div>
     <div class="nav-buttons">
-      <button id="openHelpBtn" class="btn-help" title="How SpeakUp works"><i
+      <button id="openHelpBtn" class="btn-help" title="How SpeakUp works" aria-label="Help"><i
           class="fas fa-circle-question"></i></button>
       <button id="openWriteReviewBtnNav" class="btn-primary"><i class="fas fa-pen"></i> Write a Review</button>
       <button id="openBusinessAuthBtn" class="btn-sm btn-outline-light"><i class="fas fa-store"></i> Business
@@ -59,24 +144,25 @@
       <p class="hero-eyebrow"><i class="fas fa-map-marker-alt"></i>&nbsp; Namibia's Consumer Voice Platform</p>
       <h1>Your voice,<br><em>their accountability.</em></h1>
       <p class="hero-tagline">Rate local businesses, share real experiences, and join the conversation that drives
-        change.</p>
+        change across Namibia.</p>
     </div>
   </div>
 
-  <div class="page-body">
+  <div class="page-body" id="main-content">
     <div class="controls-bar">
       <div class="control-input"><i class="fas fa-search"></i><input type="text" id="searchBusiness"
           placeholder="Search by business name..."></div>
-      <div class="control-input"><i class="fas fa-tags"></i><select id="categoryFilter">
+      <div class="control-input"><i class="fas fa-tags"></i><select id="categoryFilter" aria-label="Filter by category">
           <option value="all">All Categories</option>
         </select></div>
-      <div class="control-input"><i class="fas fa-star"></i><select id="ratingFilter"></select></div>
-      <div class="control-input"><i class="fas fa-sort"></i><select id="sortBy">
+      <div class="control-input"><i class="fas fa-star"></i><select id="ratingFilter"
+          aria-label="Filter by rating"></select></div>
+      <div class="control-input"><i class="fas fa-sort"></i><select id="sortBy" aria-label="Sort reviews">
           <option value="newest">Newest First</option>
           <option value="highest">Highest Rated</option>
         </select></div>
     </div>
-    <div id="liveToast" class="live-toast" style="display:none;"></div>
+    <div id="liveToast" class="live-toast" style="display:none;" role="alert" aria-live="polite"></div>
     <div id="reviewsContainer" class="reviews-grid">
       <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><br>Loading reviews…</div>
     </div>
@@ -85,15 +171,17 @@
   <footer class="site-footer">
     <strong>SpeakUp Namibia</strong> - Empowering consumer voices since <span id="currentYear"></span>. All reviews
     represent the opinions of their authors.
+    <br><small><a href="/privacy.html" style="color:rgba(255,255,255,0.5);">Privacy Policy</a> | <a href="/terms.html"
+        style="color:rgba(255,255,255,0.5);">Terms of Use</a></small>
   </footer>
 
   <!-- HELP MODAL -->
-  <div id="helpModal" class="modal">
+  <div id="helpModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
     <div class="modal-content" style="max-width:560px;">
       <div class="modal-header">
-        <span class="modal-title"><i class="fas fa-circle-question"
+        <span class="modal-title" id="helpModalTitle"><i class="fas fa-circle-question"
             style="color:var(--amber);margin-right:10px;"></i>How SpeakUp Namibia Works</span>
-        <button class="btn-close" onclick="closeModal('helpModal')">&#x2715;</button>
+        <button class="btn-close" onclick="closeModal('helpModal')" aria-label="Close">&#x2715;</button>
       </div>
       <div class="help-steps">
         <div class="help-step">
@@ -121,8 +209,7 @@
           <div class="help-num">4</div>
           <div><strong>Business Portal</strong>
             <p>Business owners subscribe for <strong>N$200/month</strong> to get a Verified Badge, full analytics
-              dashboard, reply to reviews, live alerts, and subscription management.
-            </p>
+              dashboard, reply to reviews, live alerts, and subscription management.</p>
           </div>
         </div>
       </div>
@@ -130,28 +217,31 @@
   </div>
 
   <!-- WRITE REVIEW MODAL -->
-  <div id="newReviewModal" class="modal">
+  <div id="newReviewModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="newReviewTitle">
     <div class="modal-content">
-      <div class="modal-header"><span class="modal-title">Share Your Experience</span><button class="btn-close"
-          id="closeNewModalBtn">&#x2715;</button></div>
-      <form id="reviewForm">
-        <div class="form-group"><label>Business Name *</label><input type="text" id="businessName" required></div>
-        <div class="form-group"><label>Category *</label><select id="reviewCategory" required>
+      <div class="modal-header"><span class="modal-title" id="newReviewTitle">Share Your Experience</span><button
+          class="btn-close" id="closeNewModalBtn" aria-label="Close">&#x2715;</button></div>
+      <form id="reviewForm" novalidate>
+        <div class="form-group"><label for="businessName">Business Name *</label><input type="text" id="businessName"
+            required></div>
+        <div class="form-group"><label for="reviewCategory">Category *</label><select id="reviewCategory" required>
             <option value="">Select a category…</option>
           </select></div>
         <div class="form-group"><label>Your Rating *</label>
-          <div id="ratingStarsInput" class="star-rating">
-            <i data-value="1" class="far fa-star"></i><i data-value="2" class="far fa-star"></i><i data-value="3"
-              class="far fa-star"></i><i data-value="4" class="far fa-star"></i><i data-value="5"
-              class="far fa-star"></i>
+          <div id="ratingStarsInput" class="star-rating" role="radiogroup" aria-label="Rating">
+            <i data-value="1" class="far fa-star" aria-label="1 star"></i><i data-value="2" class="far fa-star"
+              aria-label="2 stars"></i><i data-value="3" class="far fa-star" aria-label="3 stars"></i><i data-value="4"
+              class="far fa-star" aria-label="4 stars"></i><i data-value="5" class="far fa-star"
+              aria-label="5 stars"></i>
           </div>
           <input type="hidden" id="selectedRating" value="0">
         </div>
-        <div class="form-group"><label>Review Title *</label><input type="text" id="reviewTitle" required></div>
-        <div class="form-group"><label>Your Story *</label><textarea rows="4" id="reviewContent" required></textarea>
-        </div>
-        <div class="form-group"><label>Your Name *</label><input type="text" id="userName" placeholder="Full name"
+        <div class="form-group"><label for="reviewTitle">Review Title *</label><input type="text" id="reviewTitle"
             required></div>
+        <div class="form-group"><label for="reviewContent">Your Story *</label><textarea rows="4" id="reviewContent"
+            required></textarea></div>
+        <div class="form-group"><label for="userName">Your Name *</label><input type="text" id="userName"
+            placeholder="Full name" required></div>
         <div class="modal-footer">
           <button type="button" class="btn-outline-dark" id="closeNewModalBtnFooter">Cancel</button>
           <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Publish Review</button>
@@ -161,17 +251,17 @@
   </div>
 
   <!-- BUSINESS AUTH MODAL -->
-  <div id="businessAuthModal" class="modal">
+  <div id="businessAuthModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
     <div class="modal-content" style="max-width:480px;">
-      <div class="modal-header"><span class="modal-title">Business Portal</span><button class="btn-close"
-          id="closeAuthModalBtn">&#x2715;</button></div>
+      <div class="modal-header"><span class="modal-title" id="authModalTitle">Business Portal</span><button
+          class="btn-close" id="closeAuthModalBtn" aria-label="Close">&#x2715;</button></div>
       <div class="tab-bar"><button id="showLoginTab" class="tab-btn active">Login</button><button id="showRegisterTab"
           class="tab-btn">Register</button></div>
       <div id="loginPanel">
-        <div class="form-group"><label>Email</label><input type="email" id="loginEmail"
+        <div class="form-group"><label for="loginEmail">Email</label><input type="email" id="loginEmail"
             placeholder="business@example.com"></div>
-        <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••">
-        </div>
+        <div class="form-group"><label for="loginPassword">Password</label><input type="password" id="loginPassword"
+            placeholder="••••••••"></div>
         <button id="doLoginBtn" class="btn-primary" style="width:100%;justify-content:center;"><i
             class="fas fa-sign-in-alt"></i> Login</button>
         <p id="loginError" class="error-msg"></p>
@@ -181,14 +271,14 @@
           <div>Registration requires a <strong>N$200/month</strong> subscription. Fill in your details then continue to
             see all benefits.</div>
         </div>
-        <div class="form-group"><label>Business Name</label><input type="text" id="regBizName"
+        <div class="form-group"><label for="regBizName">Business Name</label><input type="text" id="regBizName"
             placeholder="Your business name"></div>
-        <div class="form-group"><label>Category</label><select id="regBizCategory">
+        <div class="form-group"><label for="regBizCategory">Category</label><select id="regBizCategory">
             <option value="">Select a category…</option>
           </select></div>
-        <div class="form-group"><label>Email</label><input type="email" id="regEmail"
+        <div class="form-group"><label for="regEmail">Email</label><input type="email" id="regEmail"
             placeholder="business@example.com"></div>
-        <div class="form-group"><label>Password</label><input type="password" id="regPassword"
+        <div class="form-group"><label for="regPassword">Password</label><input type="password" id="regPassword"
             placeholder="Min. 6 characters"></div>
         <button id="doRegisterBtn" class="btn-primary" style="width:100%;justify-content:center;"><i
             class="fas fa-user-plus"></i> Continue to Subscription</button>
@@ -198,10 +288,10 @@
   </div>
 
   <!-- SUBSCRIPTION PAYWALL -->
-  <div id="subscriptionModal" class="modal">
+  <div id="subscriptionModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="subModalTitle">
     <div class="modal-content" style="max-width:600px;">
-      <div class="modal-header"><span class="modal-title">Business Subscription</span><button class="btn-close"
-          id="closeSubModal">&#x2715;</button></div>
+      <div class="modal-header"><span class="modal-title" id="subModalTitle">Business Subscription</span><button
+          class="btn-close" id="closeSubModal" aria-label="Close">&#x2715;</button></div>
       <div class="sub-price-hero">
         <div class="sub-amount"><span class="sub-currency">N$</span><span class="sub-num">200</span><span
             class="sub-per">/month</span></div>
@@ -212,37 +302,32 @@
       <ul class="benefits-list">
         <li><i class="fas fa-circle-check"></i>
           <div><strong>Verified Business Badge</strong>
-            <p>A prominent green ✓ badge on every review related to your business — instantly builds consumer trust.</p>
+            <p>A prominent green ✓ badge on every review — instantly builds consumer trust.</p>
           </div>
         </li>
         <li><i class="fas fa-circle-check"></i>
           <div><strong>Full Analytics Dashboard</strong>
-            <p>Average rating, total reviews, response rate, rating breakdown charts, and a recent activity feed.</p>
+            <p>Average rating, total reviews, response rate, rating breakdown, and recent activity.</p>
           </div>
         </li>
         <li><i class="fas fa-circle-check"></i>
           <div><strong>Public Review Replies</strong>
-            <p>Respond publicly as your verified business. Show customers you are accountable and care.</p>
+            <p>Respond publicly as your verified business. Show customers you are accountable.</p>
           </div>
         </li>
         <li><i class="fas fa-circle-check"></i>
           <div><strong>Profile &amp; Settings Control</strong>
-            <p>Update business name, category, email, and password anytime from your private settings panel.</p>
+            <p>Update business name, category, email, and password anytime.</p>
           </div>
         </li>
         <li><i class="fas fa-circle-check"></i>
           <div><strong>Priority Search Visibility</strong>
-            <p>Your verified badge makes consumers more likely to trust and engage with your profile.</p>
-          </div>
-        </li>
-        <li><i class="fas fa-circle-check"></i>
-          <div><strong>WebSocket Live Alerts</strong>
-            <p>Instant notifications the moment a new review or comment is posted about your business.</p>
+            <p>Your verified badge makes consumers more likely to trust your profile.</p>
           </div>
         </li>
         <li><i class="fas fa-circle-check"></i>
           <div><strong>Subscription Management</strong>
-            <p>View your expiry date, active status, and renew with one click inside your dashboard.</p>
+            <p>View expiry, active status, and renew with one click inside dashboard.</p>
           </div>
         </li>
       </ul>
@@ -258,22 +343,22 @@
   </div>
 
   <!-- LOGOUT CONFIRM -->
-  <div id="logoutConfirmModal" class="modal">
+  <div id="logoutConfirmModal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content" style="max-width:400px;">
       <div class="modal-header"><span class="modal-title" style="font-size:1.2rem;"><i class="fas fa-right-from-bracket"
             style="color:var(--red);margin-right:10px;"></i>Confirm Logout</span><button class="btn-close"
-          onclick="closeModal('logoutConfirmModal')">&#x2715;</button></div>
+          onclick="closeModal('logoutConfirmModal')" aria-label="Close">&#x2715;</button></div>
       <p style="color:var(--ink-mid);margin-bottom:1.5rem;line-height:1.65;">Are you sure you want to log out of the
         Business Portal? You will need to sign back in to access your dashboard and respond to reviews.</p>
       <div class="modal-footer" style="margin-top:0;padding-top:0;border-top:none;">
         <button class="btn-outline-dark" onclick="closeModal('logoutConfirmModal')">Stay Logged In</button>
-        <button class="btn-danger" id="confirmLogoutBtn"><i class="fas fa-right-from-bracket"></i> Yes, Logout</button>
+        <button class="btn-danger" id="confirmLogoutBtn"><i class="fas fa-right-from-bracket"></i>Logout</button>
       </div>
     </div>
   </div>
 
   <!-- REVIEW DETAIL MODAL -->
-  <div id="detailModal" class="modal">
+  <div id="detailModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle">
     <div class="modal-content" id="detailModalContent"></div>
   </div>
 

@@ -4,7 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <!-- SEO: Business portal should NOT be indexed by search engines (private dashboard) -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description"
+    content="Business portal for SpeakUp Namibia. Manage reviews, reply to customers, view analytics, and handle subscription.">
   <title>SpeakUp Namibia - Business Portal</title>
+  <link rel="canonical" href="https://speakupnamibia.com/business.html">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="business.css">
   <link rel="shortcut icon" href="./logo-icon.png" type="image/x-icon">
@@ -15,8 +20,8 @@
 
   <!-- TOP BAR -->
   <header class="biz-topbar">
-    <a href="index.html" class="biz-logo">
-      <span class="logo-icon"><img class="logo-image" src="./logo-icon.png" alt="SpeakUp Namibia"></span>
+    <a href="index.html" class="biz-logo" aria-label="SpeakUp Namibia Home">
+      <span class="logo-icon"><img class="logo-image" src="./logo-icon.png" alt="SpeakUp Namibia Logo"></span>
       <span>SpeakUp<span class="biz-logo-portal"> Business Portal</span></span>
     </a>
     <div class="biz-topbar-right">
@@ -32,12 +37,12 @@
   <div class="biz-portal-layout">
 
     <!-- SIDEBAR -->
-    <aside class="biz-sidebar" id="bizSidebar">
+    <aside class="biz-sidebar" id="bizSidebar" aria-label="Business Portal Navigation">
       <div class="biz-sidebar-header">
         <div class="biz-avatar" id="bizAvatar">
           <img id="sidebarAvatarImg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:none;"
             alt="Business logo">
-          <i class="fas fa-building" id="sidebarAvatarIcon"></i>
+          <i class="fas fa-building" id="sidebarAvatarIcon" aria-hidden="true"></i>
         </div>
         <div class="biz-avatar-name" id="sidebarBizName">—</div>
         <span class="badge-verified biz-badge-verified">✓ Verified Business</span>
@@ -99,8 +104,9 @@
           <div class="form-group">
             <div style="display:flex; align-items:center; gap:16px; margin-bottom:12px; flex-wrap:wrap;">
               <div id="avatarPreviewImg"
-                style="width:70px; height:70px; border-radius:50%; background:#e0e0e0; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-                <i class="fas fa-store" style="font-size:2rem; color:var(--forest);"></i>
+                style="width:70px; height:70px; border-radius:50%; background:#e0e0e0; display:flex; align-items:center; justify-content:center; overflow:hidden;"
+                aria-label="Business logo preview">
+                <i class="fas fa-store" style="font-size:2rem; color:var(--forest);" aria-hidden="true"></i>
               </div>
               <div class="biz-avatar-actions">
                 <label for="avatarUpload" class="biz-avatar-action"><i class="fas fa-upload"></i> Upload Image</label>
@@ -111,28 +117,28 @@
           </div>
           <hr class="settings-divider">
           <h3 class="biz-panel-title"><i class="fas fa-pen"></i> Update Business Details</h3>
-          <div class="form-group"><label>Business Name</label><input type="text" id="settingsBizName"></div>
-          <div class="form-group"><label>Category</label><select id="settingsCategory"></select></div>
-          <div class="form-group"><label>Email Address</label><input type="email" id="settingsEmail"></div>
+          <div class="form-group"><label for="settingsBizName">Business Name</label><input type="text"
+              id="settingsBizName"></div>
+          <div class="form-group"><label for="settingsCategory">Category</label><select id="settingsCategory"></select>
+          </div>
+          <div class="form-group"><label for="settingsEmail">Email Address</label><input type="email"
+              id="settingsEmail"></div>
           <hr class="settings-divider">
           <h3 class="biz-panel-title"><i class="fas fa-bell"></i> Live Notification Preferences</h3>
           <div class="form-group">
-            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-              <input type="checkbox" id="notifNewReview" checked>New review about my business
-            </label>
-            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; margin-top:6px;">
-              <input type="checkbox" id="notifNewComment" checked>New comment on my reviews
-            </label>
-            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; margin-top:6px;">
-              <input type="checkbox" id="notifBizReply" checked>Someone replied to my reply
-            </label>
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input type="checkbox"
+                id="notifNewReview" checked>New review about my business</label>
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; margin-top:6px;"><input
+                type="checkbox" id="notifNewComment" checked>New comment on my reviews</label>
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; margin-top:6px;"><input
+                type="checkbox" id="notifBizReply" checked>Someone replied to my reply</label>
           </div>
           <hr class="settings-divider">
           <h3 class="biz-panel-title"><i class="fas fa-lock"></i> Change Password</h3>
-          <div class="form-group"><label>New Password</label><input type="password" id="settingsPassword"
-              placeholder="Leave blank to keep current"></div>
-          <div class="form-group"><label>Confirm New Password</label><input type="password" id="settingsPasswordConfirm"
-              placeholder="Repeat new password"></div>
+          <div class="form-group"><label for="settingsPassword">New Password</label><input type="password"
+              id="settingsPassword" placeholder="Leave blank to keep current"></div>
+          <div class="form-group"><label for="settingsPasswordConfirm">Confirm New Password</label><input
+              type="password" id="settingsPasswordConfirm" placeholder="Repeat new password"></div>
           <p id="settingsError" class="error-msg"></p>
           <p id="settingsSuccess" class="success-msg"></p>
           <button id="saveSettingsBtn" class="btn-primary"><i class="fas fa-floppy-disk"></i> Save Changes</button>
@@ -161,14 +167,15 @@
   </div>
 
   <!-- REVIEW MODAL -->
-  <div id="bizReviewModal" class="modal">
+  <div id="bizReviewModal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content">
       <div class="modal-header"><span class="modal-title">Share Your Experience</span><button class="btn-close"
           id="closeBizReviewModalBtn">&#x2715;</button></div>
       <form id="bizReviewForm">
-        <div class="form-group"><label>Business Name *</label><input type="text" id="bizReviewBusinessName" required
-            placeholder="Business you are reviewing"></div>
-        <div class="form-group"><label>Category *</label><select id="bizReviewCategory" required>
+        <div class="form-group"><label for="bizReviewBusinessName">Business Name *</label><input type="text"
+            id="bizReviewBusinessName" required placeholder="Business you are reviewing"></div>
+        <div class="form-group"><label for="bizReviewCategory">Category *</label><select id="bizReviewCategory"
+            required>
             <option value="">Select a category…</option>
           </select></div>
         <div class="form-group"><label>Your Rating *</label>
@@ -179,21 +186,21 @@
           </div>
           <input type="hidden" id="bizSelectedRating" value="0">
         </div>
-        <div class="form-group"><label>Review Title *</label><input type="text" id="bizReviewTitle" required></div>
-        <div class="form-group"><label>Your Story *</label><textarea rows="4" id="bizReviewContent" required></textarea>
-        </div>
-        <div class="form-group"><label>Your Name (public) *</label><input type="text" id="bizReviewUserName" required
-            readonly style="background:#f0ebe0; cursor:not-allowed;"></div>
-        <div class="modal-footer">
-          <button type="button" class="btn-outline-dark" id="closeBizReviewModalFooter">Cancel</button>
-          <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Publish Review</button>
-        </div>
+        <div class="form-group"><label for="bizReviewTitle">Review Title *</label><input type="text" id="bizReviewTitle"
+            required></div>
+        <div class="form-group"><label for="bizReviewContent">Your Story *</label><textarea rows="4"
+            id="bizReviewContent" required></textarea></div>
+        <div class="form-group"><label for="bizReviewUserName">Your Name (public) *</label><input type="text"
+            id="bizReviewUserName" required readonly style="background:#f0ebe0; cursor:not-allowed;"></div>
+        <div class="modal-footer"><button type="button" class="btn-outline-dark"
+            id="closeBizReviewModalFooter">Cancel</button><button type="submit" class="btn-primary"><i
+              class="fas fa-paper-plane"></i> Publish Review</button></div>
       </form>
     </div>
   </div>
 
   <!-- SUBSCRIPTION STATUS MODAL -->
-  <div id="subStatusModal" class="modal">
+  <div id="subStatusModal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content" style="max-width:460px;">
       <div class="modal-header"><span class="modal-title"><i class="fas fa-rotate"
             style="color:var(--amber);margin-right:10px;"></i>Subscription Status</span><button class="btn-close"
@@ -203,22 +210,21 @@
   </div>
 
   <!-- LOGOUT CONFIRM MODAL -->
-  <div id="logoutConfirmModal" class="modal">
+  <div id="logoutConfirmModal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content" style="max-width:400px;">
       <div class="modal-header"><span class="modal-title" style="font-size:1.2rem;"><i class="fas fa-right-from-bracket"
             style="color:var(--red);margin-right:10px;"></i>Confirm Logout</span><button class="btn-close"
           onclick="closeModal('logoutConfirmModal')">&#x2715;</button></div>
       <p style="color:var(--ink-mid);margin-bottom:1.5rem;line-height:1.65;">Are you sure you want to log out of the
         Business Portal? You will be redirected to the consumer site.</p>
-      <div class="modal-footer" style="margin-top:0;padding-top:0;border-top:none;">
-        <button class="btn-outline-dark" onclick="closeModal('logoutConfirmModal')">Stay Logged In</button>
-        <button class="btn-danger" id="confirmLogoutBtn"><i class="fas fa-right-from-bracket"></i> Logout</button>
-      </div>
+      <div class="modal-footer" style="margin-top:0;padding-top:0;border-top:none;"><button class="btn-outline-dark"
+          onclick="closeModal('logoutConfirmModal')">Stay Logged In</button><button class="btn-danger"
+          id="confirmLogoutBtn"><i class="fas fa-right-from-bracket"></i> Logout</button></div>
     </div>
   </div>
 
   <!-- DELETE ACCOUNT CONFIRM MODAL -->
-  <div id="deleteAccountConfirmModal" class="modal">
+  <div id="deleteAccountConfirmModal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content" style="max-width:400px;">
       <div class="modal-header"><span class="modal-title" style="font-size:1.2rem;"><i class="fas fa-trash-alt"
             style="color:var(--red);margin-right:10px;"></i>Delete Account</span><button class="btn-close"
@@ -227,19 +233,16 @@
         <strong>permanent</strong>. Your business profile, verified badge, and all associated data will be removed. You
         will be logged out immediately.
       </p>
-      <div class="modal-footer" style="margin-top:0;padding-top:0;border-top:none;">
-        <button class="btn-outline-dark" onclick="closeModal('deleteAccountConfirmModal')">Cancel</button>
-        <button class="btn-danger" id="confirmDeleteAccountBtn"><i class="fas fa-trash-alt"></i> Permanently
-          Delete</button>
-      </div>
+      <div class="modal-footer" style="margin-top:0;padding-top:0;border-top:none;"><button class="btn-outline-dark"
+          onclick="closeModal('deleteAccountConfirmModal')">Cancel</button><button class="btn-danger"
+          id="confirmDeleteAccountBtn"><i class="fas fa-trash-alt"></i> Permanently Delete</button></div>
     </div>
   </div>
 
   <!-- LIVE NOTIFICATION TOAST -->
-  <div id="liveNotifToast" class="biz-live-notif" style="display:none;">
-    <i class="fas fa-bolt" style="color:var(--amber);"></i>
-    <div id="liveNotifText"></div>
-    <button onclick="document.getElementById('liveNotifToast').style.display='none'"
+  <div id="liveNotifToast" class="biz-live-notif" style="display:none;" role="alert" aria-live="polite"><i
+      class="fas fa-bolt" style="color:var(--amber);"></i>
+    <div id="liveNotifText"></div><button onclick="document.getElementById('liveNotifToast').style.display='none'"
       style="background:none;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:0.9rem;margin-left:auto;">✕</button>
   </div>
 
