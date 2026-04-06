@@ -7,6 +7,7 @@
   <title>SpeakUp Namibia - Business Portal</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="business.css">
+  <link rel="shortcut icon" href="./logo-icon.png" type="image/x-icon">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -15,7 +16,7 @@
   <!-- TOP BAR -->
   <header class="biz-topbar">
     <a href="index.html" class="biz-logo">
-      <span class="logo-icon"><i class="fas fa-bullhorn"></i></span>
+      <span class="logo-icon"><img class="logo-image" src="./logo-icon.png" alt="SpeakUp Namibia"></i></span>
       <span>SpeakUp<span class="biz-logo-portal"> Business Portal</span></span>
     </a>
     <div class="biz-topbar-right">
@@ -224,7 +225,8 @@
           onclick="closeModal('deleteAccountConfirmModal')">&#x2715;</button></div>
       <p style="color:var(--ink-mid);margin-bottom:1.5rem;line-height:1.65;"><strong>Warning:</strong> This action is
         <strong>permanent</strong>. Your business profile, verified badge, and all associated data will be removed. You
-        will be logged out immediately.</p>
+        will be logged out immediately.
+      </p>
       <div class="modal-footer" style="margin-top:0;padding-top:0;border-top:none;">
         <button class="btn-outline-dark" onclick="closeModal('deleteAccountConfirmModal')">Cancel</button>
         <button class="btn-danger" id="confirmDeleteAccountBtn"><i class="fas fa-trash-alt"></i> Permanently
