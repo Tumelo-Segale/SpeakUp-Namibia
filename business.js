@@ -2,6 +2,7 @@
  * SpeakUp Namibia — business.js
  * Business Portal: Dashboard, Reviews & Replies, Settings, Avatar Upload,
  * Export (CSV/PDF), Social Sharing, Notification Preferences
+ * OPTIMIZED FOR REAL-TIME UPDATES & INSTANT REDIRECTS (<2s)
  */
 
 const CATEGORIES = [
@@ -167,7 +168,6 @@ function loadData() {
     window.location.href = "index.html";
     return;
   }
-  // Ensure notification preferences exist
   if (!currentBusiness.notifPrefs) {
     currentBusiness.notifPrefs = {
       newReview: true,
@@ -191,7 +191,6 @@ function initUI() {
   setupAvatarUpload();
   if (currentBusiness.avatar) updateAvatarPreview(currentBusiness.avatar);
 
-  // Export buttons
   document
     .getElementById("exportCsvBtn")
     ?.addEventListener("click", exportReviewsToCSV);
@@ -199,7 +198,6 @@ function initUI() {
     .getElementById("printReportBtn")
     ?.addEventListener("click", () => window.print());
 
-  // Delete account
   const deleteBtn = document.getElementById("deleteAccountBtn");
   if (deleteBtn)
     deleteBtn.addEventListener("click", () =>
@@ -349,7 +347,7 @@ function renderDashboard() {
     : '<p style="color:var(--muted);font-size:.85rem;">No recent activity.</p>';
 }
 
-// ── Reviews & Replies (with share buttons for positive reviews) ──
+// ── Reviews & Replies (with share buttons) ──
 function renderReviews() {
   const biz = currentBusiness.businessName;
   const bizRevs = reviewsArray.filter(
@@ -425,7 +423,6 @@ function renderReviews() {
     </div>`;
     })
     .join("");
-  // Reply buttons
   document.querySelectorAll(".dReplyBtn").forEach((btn) => {
     btn.onclick = () => {
       const txt = document.getElementById(`dc_${btn.dataset.id}`)?.value.trim();
@@ -436,7 +433,6 @@ function renderReviews() {
       addCommentAsBiz(parseInt(btn.dataset.id), txt);
     };
   });
-  // Share buttons
   document.querySelectorAll(".share-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       const review = JSON.parse(btn.dataset.review);
@@ -665,11 +661,10 @@ function prefillSettings() {
   document.getElementById("settingsBizName").value =
     currentBusiness.businessName;
   document.getElementById("settingsEmail").value = currentBusiness.email;
-  setTimeout(() => {
-    document.getElementById("settingsCategory").value =
-      currentBusiness.category;
-  }, 50);
-  // Notification checkboxes
+  // Set category synchronously (already populated)
+  const catSelect = document.getElementById("settingsCategory");
+  if (catSelect) catSelect.value = currentBusiness.category;
+
   const prefs = currentBusiness.notifPrefs || {
     newReview: true,
     newComment: true,
@@ -730,7 +725,6 @@ document.getElementById("saveSettingsBtn").addEventListener("click", () => {
   businessesArray[idx].category = cat;
   businessesArray[idx].email = email;
   if (pwd) businessesArray[idx].password = pwd;
-  // Save notification preferences
   const notifPrefs = {
     newReview: document.getElementById("notifNewReview").checked,
     newComment: document.getElementById("notifNewComment").checked,
@@ -1139,7 +1133,6 @@ function showBizNotif(html) {
   }, 7000);
 }
 
-// Backdrop close
 window.addEventListener("click", (e) => {
   [
     "subStatusModal",
