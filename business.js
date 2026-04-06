@@ -791,6 +791,7 @@ document.getElementById("subCheckBtn").addEventListener("click", () => {
         <li><i class="fas fa-check"></i> Dashboard &amp; Analytics</li>
         <li><i class="fas fa-check"></i> Reply to Reviews</li>
         <li><i class="fas fa-check"></i> Profile Management</li>
+        <li><i class="fas fa-check"></i> Live Alerts & Notifications</li>
       </ul>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;">

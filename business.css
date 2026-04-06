@@ -1,3 +1,4 @@
+/* business.css */
 /* ═══════════════════════════════════════
    SpeakUp Namibia — business.css
    Business Portal exclusive styles
@@ -458,6 +459,38 @@
   background: #f0ebe0;
 }
 
+/* Avatar actions uniform styling */
+.biz-avatar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.biz-avatar-action {
+  padding: 8px 14px;
+  min-width: 110px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-align: center;
+  cursor: pointer;
+  background: transparent;
+  border: 1.5px solid var(--forest);
+  color: var(--forest);
+  font-size: 0.75rem;
+  transition: all 0.15s;
+  border-radius: var(--r);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.biz-avatar-action:hover {
+  background: var(--forest);
+  color: #fff;
+}
+
 /* ── SUBSCRIPTION MODAL CONTENT ── */
 .sub-status-badge {
   display: inline-flex;
@@ -532,7 +565,7 @@
   padding: 0.3rem 0.5rem;
   border-radius: var(--r);
   transition: background 0.15s;
-  margin-left: auto; /* push to far right inside flex container */
+  margin-left: auto;
 }
 .biz-hamburger:hover {
   background: rgba(255, 255, 255, 0.12);
@@ -578,7 +611,6 @@
     align-items: center;
     margin-left: auto;
   }
-  /* Hide email info on mobile so hamburger sits at extreme right */
   .biz-top-info {
     display: none;
   }
@@ -625,7 +657,6 @@
   .biz-two-col {
     grid-template-columns: 1fr;
   }
-  /* badge placement under avatar on mobile */
   .biz-sidebar-header .biz-badge-verified {
     margin-top: 6px;
     display: inline-block;

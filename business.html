@@ -96,19 +96,15 @@
         <div class="settings-card">
           <h3 class="biz-panel-title"><i class="fas fa-building"></i> Business Logo / Avatar</h3>
           <div class="form-group">
-            <div id="avatarPreview"
-              style="display:flex; align-items:center; gap:16px; margin-bottom:12px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:16px; margin-bottom:12px; flex-wrap:wrap;">
               <div id="avatarPreviewImg"
                 style="width:70px; height:70px; border-radius:50%; background:#e0e0e0; display:flex; align-items:center; justify-content:center; overflow:hidden;">
                 <i class="fas fa-store" style="font-size:2rem; color:var(--forest);"></i>
               </div>
-              <div style="display:flex; gap:10px;">
-                <label for="avatarUpload" class="btn-outline-dark"
-                  style="cursor:pointer; display:inline-block; padding:6px 12px; text-align:center; min-width:100px;">Upload
-                  Image</label>
+              <div class="biz-avatar-actions">
+                <label for="avatarUpload" class="biz-avatar-action"><i class="fas fa-upload"></i> Upload Image</label>
                 <input type="file" id="avatarUpload" accept="image/jpeg,image/png,image/webp" style="display:none;">
-                <button id="removeAvatarBtn" class="btn-outline-dark"
-                  style="padding:6px 12px; min-width:100px;">Remove</button>
+                <button id="removeAvatarBtn" class="biz-avatar-action"><i class="fas fa-trash-alt"></i> Remove</button>
               </div>
             </div>
           </div>
@@ -228,8 +224,7 @@
           onclick="closeModal('deleteAccountConfirmModal')">&#x2715;</button></div>
       <p style="color:var(--ink-mid);margin-bottom:1.5rem;line-height:1.65;"><strong>Warning:</strong> This action is
         <strong>permanent</strong>. Your business profile, verified badge, and all associated data will be removed. You
-        will be logged out immediately.
-      </p>
+        will be logged out immediately.</p>
       <div class="modal-footer" style="margin-top:0;padding-top:0;border-top:none;">
         <button class="btn-outline-dark" onclick="closeModal('deleteAccountConfirmModal')">Cancel</button>
         <button class="btn-danger" id="confirmDeleteAccountBtn"><i class="fas fa-trash-alt"></i> Permanently

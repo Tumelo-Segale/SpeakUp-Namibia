@@ -653,18 +653,11 @@ document.getElementById("doRegisterBtn").onclick = () => {
 };
 
 // ── PayFast Integration ──────────────────────────────────────
-// Replace with your actual PayFast Merchant ID and Key from payfast.co.za
-const PAYFAST_MERCHANT_ID = "10042465"; // sandbox merchant id
-const PAYFAST_MERCHANT_KEY = "ylo9fatwu9xyj"; // sandbox merchant key
-const PAYFAST_SANDBOX = true; // set to false in production
-const SUB_AMOUNT = "200.00"; // N$200
+const PAYFAST_MERCHANT_ID = "10042465";
+const PAYFAST_MERCHANT_KEY = "ylo9fatwu9xyj";
+const PAYFAST_SANDBOX = true;
+const SUB_AMOUNT = "200.00";
 
-/**
- * launchPayFast — opens PayFast in a popup window.
- * Polls for the return URL to detect successful vs cancelled payments.
- * Production: implement a server-side ITN (Instant Transaction Notification)
- * handler at your notify_url to securely verify payment completion.
- */
 function launchPayFast({ email, itemName, onSuccess, onCancel }) {
   const baseUrl = PAYFAST_SANDBOX
     ? "https://sandbox.payfast.co.za/eng/process"
@@ -694,7 +687,6 @@ function launchPayFast({ email, itemName, onSuccess, onCancel }) {
     return;
   }
 
-  // Build and submit form in popup
   popup.document
     .write(`<!DOCTYPE html><html><head><title>Redirecting to PayFast…</title>
     <style>body{margin:0;background:#1a3a2a;display:flex;flex-direction:column;align-items:center;
@@ -721,7 +713,6 @@ function launchPayFast({ email, itemName, onSuccess, onCancel }) {
     form.submit();
   }, 300);
 
-  // Poll popup location for return/cancel
   const poll = setInterval(() => {
     try {
       if (popup.closed) {
@@ -758,7 +749,6 @@ document.getElementById("cancelSubBtn").onclick = () => {
 document.getElementById("confirmPayBtn").onclick = () => {
   if (!pendingRegData) return;
   const { bizName, category, email, pwd } = pendingRegData;
-  // Launch PayFast — only register account on successful payment
   launchPayFast({
     email,
     itemName: `SpeakUp Namibia – Business Registration (${bizName})`,

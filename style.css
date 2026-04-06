@@ -1,3 +1,4 @@
+/* style.css */
 *,
 *::before,
 *::after {
@@ -938,26 +939,19 @@ select:focus {
 /* ── CONSUMER MOBILE HAMBURGER & SIDEBAR ── */
 .consumer-hamburger {
   display: none;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1.5px solid rgba(255, 255, 255, 0.25);
-  color: #fff;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--r);
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.25rem;
   cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  transition: all 0.15s;
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--r);
+  transition: background 0.15s;
+  margin-left: auto; /* push to far right */
   flex-shrink: 0;
 }
 .consumer-hamburger:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-/* Push hamburger to far right */
-.nav-buttons .consumer-hamburger {
-  margin-left: auto;
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .consumer-sidebar-overlay {
@@ -1091,6 +1085,8 @@ select:focus {
 @media (max-width: 700px) {
   .consumer-hamburger {
     display: flex;
+    align-items: center;
+    margin-left: auto;
   }
   /* Hide nav buttons on mobile, show only hamburger */
   .nav-buttons .btn-primary,
